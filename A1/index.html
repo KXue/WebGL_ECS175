@@ -6,11 +6,11 @@
     function Ready(){
       GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
       Color = [0.0, 0.0, 0.0, 1.0];
-      setInterval(Update, 33);
+      Update();
     }
     function Update(){
       GL.GL.clear(16384 | 256);
-      GL.Draw(Curve, Color);
+      GL.Draw(Square, Color);
     }
   </script>
 </head>

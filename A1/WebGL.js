@@ -117,7 +117,11 @@ function LoadShader(Script){
 	return Code;
 }
 
-var Curve = {
+function Sierpinski(level){
+
+}
+
+var Square = {
   Rotation : 0,
 	Vertices : [
 
@@ -132,5 +136,5 @@ var Curve = {
     1, 2,
     2, 3,
     3, 0
-  ]
+  ],
 };
