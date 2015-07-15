@@ -10,7 +10,8 @@
     }
     function Update(){
       GL.GL.clear(16384 | 256);
-      GL.Draw(Square, Color);
+      GL.Draw(SierpinskiFillSquare(7, [-1.0, -1.0], 2.0), Color);
+
     }
   </script>
 </head>
@@ -19,12 +20,12 @@
       Your Browser Doesn't Support HTML5's Canvas.
   </canvas>
   <script id="VertexShader" type="x-shader/x-vertex">
-    attribute highp vec3 VertexPosition;
+    attribute highp vec2 VertexPosition;
 
     uniform highp mat4 PerspectiveMatrix;
 
     void main(void) {
-			gl_Position = PerspectiveMatrix * vec4(VertexPosition, 1.0);
+			gl_Position = PerspectiveMatrix * vec4(VertexPosition, -1.0, 1.0);
 		}
   </script>
   <script id="FragmentShader" type="x-shader/x-fragment">

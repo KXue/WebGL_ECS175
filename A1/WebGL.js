@@ -51,7 +51,7 @@ function WebGL(CID, FSID, VSID){
 			this.GL.bufferData(this.GL.ARRAY_BUFFER, new Float32Array(Object.Vertices), this.GL.STATIC_DRAW);
 
       //Connect Buffer To Shader's attribute
-      this.GL.vertexAttribPointer(this.VertexPosition, 3, this.GL.FLOAT, false, 0, 0);
+      this.GL.vertexAttribPointer(this.VertexPosition, 2, this.GL.FLOAT, false, 0, 0);
 
       var LineBuffer = this.GL.createBuffer();
 			this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, LineBuffer);
@@ -117,18 +117,159 @@ function LoadShader(Script){
 	return Code;
 }
 
-function Sierpinski(level){
-
+function SierpinskiFillSquare(level, topLeft, length){
+  var firstWidth = length/2.0;
+  var up = [topLeft[0] + firstWidth, topLeft[1] + firstWidth / 2.0];
+  var left = [topLeft[0] + firstWidth / 2.0, topLeft[1] + firstWidth];
+  var down = [up[0], up[1] + firstWidth];
+  var right = [left[0] + firstWidth, left[1]];
+  return Sierpinski(level, up, down, left, right);
 }
+
+function Sierpinski(level, up, down, left, right){
+
+  var diagonalDistance = right[0] - left[0];
+  level--;
+
+  var sierpinskiVertices = [];
+  Array.prototype.push.apply(sierpinskiVertices, SierpinskiUp(level, up, diagonalDistance));
+  Array.prototype.push.apply(sierpinskiVertices, SierpinskiRight(level, right, diagonalDistance));
+  Array.prototype.push.apply(sierpinskiVertices, SierpinskiDown(level, down, diagonalDistance));
+  Array.prototype.push.apply(sierpinskiVertices, SierpinskiLeft(level, left, diagonalDistance));
+
+  var sierpinskiLines = [];
+  for(i = 0; i < sierpinskiVertices.length/2.0 - 1; i++){
+    sierpinskiLines.push(i);
+    sierpinskiLines.push(i+1);
+  }
+  sierpinskiLines.push(sierpinskiVertices.length/2.0 - 1);
+  sierpinskiLines.push(0);
+
+  var sierpinskiCurve =
+  {
+    Rotation: 0,
+    Vertices: sierpinskiVertices,
+    Lines: sierpinskiLines
+  };
+
+  return sierpinskiCurve;
+}
+
+function SierpinskiUp(level, up, diagonalDistance){
+  var unitDistance = diagonalDistance/4.0;
+  var bottomLeft = [up[0] - unitDistance, up[1]];
+  var bottomRight = [up[0] + unitDistance, up[1]];
+  var topLeft = [up[0] - (2.0 * unitDistance), up[1] - unitDistance];
+  var topRight = [up[0] + (2.0 * unitDistance), up[1] - unitDistance];
+
+  var sierpinskiVertices = [];
+  if(level == 0){
+    sierpinskiVertices = [
+      topLeft[0], topLeft[1],
+      bottomLeft[0], bottomLeft[1],
+      bottomRight[0], bottomRight[1],
+      topRight[0], topRight[1]
+    ];
+  }
+  else{
+    level--;
+    var newDiagonalDistance = diagonalDistance/2.0;
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiUp(level, topLeft, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiRight(level, bottomLeft, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiLeft(level, bottomRight, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiUp(level, topRight, newDiagonalDistance));
+  }
+  return sierpinskiVertices
+}
+function SierpinskiDown(level, down, diagonalDistance){
+  var unitDistance = diagonalDistance/4.0;
+  var bottomLeft = [down[0] - (2.0 * unitDistance), down[1] + unitDistance];
+  var bottomRight = [down[0] + (2.0 * unitDistance), down[1] + unitDistance];
+  var topLeft = [down[0] - unitDistance, down[1]];
+  var topRight = [down[0] + unitDistance, down[1]];
+
+  var sierpinskiVertices = [];
+  if(level == 0){
+    sierpinskiVertices = [
+      bottomRight[0], bottomRight[1],
+      topRight[0], topRight[1],
+      topLeft[0], topLeft[1],
+      bottomLeft[0], bottomLeft[1]
+    ];
+  }
+  else{
+    level--;
+    var newDiagonalDistance = diagonalDistance/2.0;
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiDown(level, bottomRight, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiLeft(level, topRight, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiRight(level, topLeft, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiDown(level, bottomLeft, newDiagonalDistance));
+  }
+  return sierpinskiVertices;
+}
+function SierpinskiLeft(level, left, diagonalDistance){
+  var unitDistance = diagonalDistance/4.0;
+  var bottomLeft = [left[0] - unitDistance, left[1] + 2.0 * unitDistance];
+  var bottomRight = [left[0], left[1] + unitDistance];
+  var topLeft = [left[0] - unitDistance, left[1] - 2.0 * unitDistance];
+  var topRight = [left[0], left[1] - unitDistance];
+
+  var sierpinskiVertices = [];
+  if(level == 0){
+    sierpinskiVertices = [
+      bottomLeft[0], bottomLeft[1],
+      bottomRight[0], bottomRight[1],
+      topRight[0], topRight[1],
+      topLeft[0], topLeft[1]
+    ];
+  }
+  else{
+    level--;
+    var newDiagonalDistance = diagonalDistance/2.0;
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiLeft(level, bottomLeft, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiUp(level, bottomRight, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiDown(level, topRight, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiLeft(level, topLeft, newDiagonalDistance));
+  }
+  return sierpinskiVertices;
+}
+function SierpinskiRight(level, right, diagonalDistance){
+  var unitDistance = diagonalDistance/4.0;
+  var topLeft = [right[0], right[1] - unitDistance];
+  var topRight = [right[0] + unitDistance, right[1] - 2.0 * unitDistance];
+  var bottomLeft = [right[0], right[1] + unitDistance];
+  var bottomRight = [right[0] + unitDistance, right[1] + 2.0 * unitDistance];
+
+  var sierpinskiVertices = [];
+  if(level == 0){
+    sierpinskiVertices = [
+      topRight[0], topRight[1],
+      topLeft[0], topLeft[1],
+      bottomLeft[0], bottomLeft[1],
+      bottomRight[0], bottomRight[1]
+    ];
+  }
+  else{
+    level--;
+    var newDiagonalDistance = diagonalDistance/2.0;
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiRight(level, topRight, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiDown(level, topLeft, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiUp(level, bottomLeft, newDiagonalDistance));
+    Array.prototype.push.apply(sierpinskiVertices, SierpinskiRight(level, bottomRight, newDiagonalDistance));
+  }
+  return sierpinskiVertices;
+}
+
+
 
 var Square = {
   Rotation : 0,
 	Vertices : [
 
-    0.5,  0.5, -1.0,
-    0.5, -0.5, -1.0,
-    -0.5, -0.5, -1.0,
-    -0.5, 0.5, -1.0
+    0.5,  0.0,
+    0.0, -0.5,
+    -0.5, 0.0,
+    0.0, 0.5
 
   ],
   Lines: [
