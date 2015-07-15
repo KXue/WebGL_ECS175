@@ -49,6 +49,7 @@ function WebGL(CID, FSID, VSID){
 
 			// Fill it With the Data
 			this.GL.bufferData(this.GL.ARRAY_BUFFER, new Float32Array(Object.Vertices), this.GL.STATIC_DRAW);
+      console.log(Object);
 
       //Connect Buffer To Shader's attribute
       this.GL.vertexAttribPointer(this.VertexPosition, 2, this.GL.FLOAT, false, 0, 0);
@@ -260,7 +261,48 @@ function SierpinskiRight(level, right, diagonalDistance){
   return sierpinskiVertices;
 }
 
+function Conchoid(a, b, largestX, largestY){
+  var vertexArray = [];
+  var lineArray = [];
+  var radians;
+  var secValue;
+  var radius;
+  var start = true;
+  var nextPoint;
 
+  for(i = 0; i < 360; i++){
+    radians = i * Math.PI / 180.0;
+    secValue = 1 / Math.cos(radians);
+    if(secValue != Infinity && Math.abs(secValue) < 1000000000000000){
+      radius = b + a * secValue;
+      nextPoint = PolarToCartesian(radius, radians, largestX, largestY)
+      Array.prototype.push.apply(vertexArray, nextPoint);
+      if(start){
+        start = false;
+        console.log("start");
+      }
+      else{
+        lineArray.push(vertexArray.length / 2.0 - 2);
+        lineArray.push(vertexArray.length / 2.0 - 1);
+      }
+    }
+    else{
+      start = true;
+    }
+  }
+  lineArray.push(0);
+  lineArray.push(vertexArray.length / 2.0 - 1);
+  var conchoidCurve = {
+    Rotation: 0,
+    Vertices: vertexArray,
+    Lines: lineArray
+  };
+  return conchoidCurve;
+}
+
+function PolarToCartesian(radius, theta, largestX, largestY){
+  return([radius * Math.cos(theta) / (largestX * 0.5), radius * Math.sin(theta) / (largestY * 0.5)]);
+}
 
 var Square = {
   Rotation : 0,
