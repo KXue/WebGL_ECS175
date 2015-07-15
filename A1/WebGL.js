@@ -273,13 +273,27 @@ function Conchoid(a, b, largestX, largestY){
   for(i = 0; i < 360; i++){
     radians = i * Math.PI / 180.0;
     secValue = 1 / Math.cos(radians);
-    if(secValue != Infinity && Math.abs(secValue) < 1000000000000000){
+
+    if(a != 0 && secValue != Infinity && Math.abs(secValue) < 1000000000000000){
       radius = b + a * secValue;
       nextPoint = PolarToCartesian(radius, radians, largestX, largestY)
       Array.prototype.push.apply(vertexArray, nextPoint);
+
       if(start){
         start = false;
-        console.log("start");
+      }
+      else{
+        lineArray.push(vertexArray.length / 2.0 - 2);
+        lineArray.push(vertexArray.length / 2.0 - 1);
+      }
+    }
+    else if(a == 0){
+      radius = b;
+      nextPoint = PolarToCartesian(radius, radians, largestX, largestY)
+      Array.prototype.push.apply(vertexArray, nextPoint);
+
+      if(start){
+        start = false;
       }
       else{
         lineArray.push(vertexArray.length / 2.0 - 2);
@@ -301,7 +315,7 @@ function Conchoid(a, b, largestX, largestY){
 }
 
 function PolarToCartesian(radius, theta, largestX, largestY){
-  return([radius * Math.cos(theta) / (largestX * 0.5), radius * Math.sin(theta) / (largestY * 0.5)]);
+  return([radius * Math.cos(theta) / largestX, radius * Math.sin(theta) / largestY]);
 }
 
 var Square = {
