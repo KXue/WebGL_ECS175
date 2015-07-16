@@ -1,0 +1,52 @@
+
+function Conchoid(a, b, largestX, largestY){
+  this.Vertices = [];
+  this.Lines = [];
+  this.Rotation = 0;
+  var radians;
+  var secValue;
+  var radius;
+  var start = true;
+  var nextPoint;
+
+  for(i = 0; i < 360; i++){
+    radians = i * Math.PI / 180.0;
+    secValue = 1 / Math.cos(radians);
+
+    if(a != 0 && secValue != Infinity && Math.abs(secValue) < 1000000000000000){
+      radius = b + a * secValue;
+      nextPoint = PolarToCartesian(radius, radians, largestX, largestY)
+      Array.prototype.push.apply(this.Vertices, nextPoint);
+
+      if(start){
+        start = false;
+      }
+      else{
+        this.Lines.push(this.Vertices.length / 2.0 - 2);
+        this.Lines.push(this.Vertices.length / 2.0 - 1);
+      }
+    }
+    else if(a == 0){
+      radius = b;
+      nextPoint = PolarToCartesian(radius, radians, largestX, largestY)
+      Array.prototype.push.apply(this.Vertices, nextPoint);
+
+      if(start){
+        start = false;
+      }
+      else{
+        this.Lines.push(this.Vertices.length / 2.0 - 2);
+        this.Lines.push(this.Vertices.length / 2.0 - 1);
+      }
+    }
+    else{
+      start = true;
+    }
+  }
+  this.Lines.push(0);
+  this.Lines.push(this.Vertices.length / 2.0 - 1);
+}
+
+function PolarToCartesian(radius, theta, largestX, largestY){
+  return([radius * Math.cos(theta) / largestX, radius * Math.sin(theta) / largestY]);
+}

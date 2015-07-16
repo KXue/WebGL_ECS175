@@ -1,23 +1,31 @@
 <html>
 <head>
   <script src="WebGL.js" type="text/javascript"></script>
+  <script src="Sierpinski.js" type="text/javascript"></script>
+  <script src="Conchoid.js" type="text/javascript"></script>
   <script type="text/javascript">
     var Color = [0.0, 0.0, 0.0, 1.0];
     function Ready(){
       GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
+      AddClickEvent("GLCanvas");
       Color = [0.0, 0.0, 0.0, 1.0];
       Update();
     }
     function Update(){
       GL.GL.clear(16384 | 256);
-//      GL.Draw(SierpinskiFillSquare(5, [-0.5, -0.5], 1.0), Color);
-      GL.Draw(Conchoid(0.0, 1.0, 2.0, 2.0), Color);
+//      GL.Draw(SierpinskiFillSquare(5, [-1.0, -1.0], 2.0), Color);
+//      GL.Draw(SierpinskiFillSquare(7, [-1.0, -1.0], 1.0), Color);
+//      GL.Draw(SierpinskiFillSquare(7, [-1.0, 0.0], 1.0), Color);
+//      GL.Draw(SierpinskiFillSquare(7, [0.0, -1.0], 1.0), Color);
+//      GL.Draw(SierpinskiFillSquare(7, [0.0, 0.0], 1.0), Color);
+
+      GL.Draw(new Conchoid(1.0, 2.0, 5.0, 5.0), Color);
 
     }
   </script>
 </head>
 <body onload = "Ready()">
-  <canvas id="GLCanvas" width="720" height="720">
+  <canvas id="GLCanvas" width="600" height="600" style = "padding:30px">
       Your Browser Doesn't Support HTML5's Canvas.
   </canvas>
   <script id="VertexShader" type="x-shader/x-vertex">
@@ -26,6 +34,7 @@
     uniform highp mat4 PerspectiveMatrix;
 
     void main(void) {
+      gl_PointSize = 3.0;
 			gl_Position = PerspectiveMatrix * vec4(VertexPosition, -1.0, 1.0);
 		}
   </script>
