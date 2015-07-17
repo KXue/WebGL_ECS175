@@ -5,31 +5,9 @@
   <script src="Sierpinski.js" type="text/javascript"></script>
   <script src="Conchoid.js" type="text/javascript"></script>
   <script src="Controller.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    var Color = [0.0, 0.0, 0.0, 1.0];
-    var currentObject = SierpinskiFillSquare(1, [-1.0, -1.0], 2.0);
-    function Ready(){
-      GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
-      AddClickEvent("GLCanvas");
-      Color = [0.0, 0.0, 0.0, 1.0];
-      Update();
-    }
-    function Update(){
-      GL.GL.clear(16384 | 256);
-      GL.Draw(currentObject, Color)
-//      GL.Draw(SierpinskiFillSquare(5, [-1.0, -1.0], 2.0), Color);
-//      GL.Draw(SierpinskiFillSquare(7, [-1.0, -1.0], 1.0), Color);
-//      GL.Draw(SierpinskiFillSquare(7, [-1.0, 0.0], 1.0), Color);
-//      GL.Draw(SierpinskiFillSquare(7, [0.0, -1.0], 1.0), Color);
-//      GL.Draw(SierpinskiFillSquare(7, [0.0, 0.0], 1.0), Color);
-
-//      GL.Draw(new Conchoid(1.0, 2.0, 5.0, 5.0), Color);
-
-    }
-  </script>
 </head>
 <body onload = "Ready()">
-  <canvas id="GLCanvas" width="600" height="600" style = "margin:30px">
+  <canvas id="GLCanvas" width="600" height="600">
       Your Browser Doesn't Support HTML5's Canvas.
   </canvas>
   <ul class = "tabs">
@@ -37,11 +15,22 @@
       <input type = "radio" name="tabs" id="tab1" checked />
       <label for="tab1">Sierpinski</label>
       <div id="tab-content1" class="tab-content">
-        Levels: <input id="level-slider" type="range" min="1" max="7" step = "1" oninput="LevelChange()" value = "1"/><label for "level-slider">1</label>
+        <label for "level-slider">Levels: (1-7)</label>
+        <input id = "level-slider" type = "range" min = "1" max = "7" step = "1" oninput = "LevelChange()" value = "1"/>
+        <label for "level-slider">1</label>
+        <br>
+        Bound:
+        <label for "bound-x">X:</label>
+        <input id = "bound-x" type = "number" min = "-1.0" max = "1.0" oninput = "BoundXChange()" value = "-1.0"/>
+        <label for "bound-y">Y:</label>
+        <input id = "bound-y" type = "number" min = "-1.0" max = "1.0" oninput = "BoundYChange()" value = "-1.0"/>
+        <br>
+        <label for "side-length">Side Length: </label>
+        <input id="side-length" type = "number" min = "0" max = "2.0" oninput = "SideLengthChange()" value = "2.0"/>
       </div>
     </li>
   </ul>
-  Color: <input id = "color-input" type="text" name="Color" maxlength = "9" onkeyup = "ColorChange()"/>
+  <label for "color-input">Color: </label><input id = "color-input" type="text" name="Color" maxlength = "9" onkeyup = "ColorChange()"/>
   <script id="VertexShader" type="x-shader/x-vertex">
     attribute highp vec2 VertexPosition;
 

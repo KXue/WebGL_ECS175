@@ -1,16 +1,17 @@
-function SierpinskiFillSquare(level, topLeft, length){
+function Sierpinski(level, topLeft, length){
+  this.Rotation = 0;
+  this.Vertices = [];
+  this.Lines = [];
+  this.level = level;
+  this.boundX = topLeft[0];
+  this.boundY = topLeft[1];
+  this.sideLength = length;
+
   var firstWidth = length/2.0;
   var up = [topLeft[0] + firstWidth, topLeft[1] + firstWidth / 2.0];
   var left = [topLeft[0] + firstWidth / 2.0, topLeft[1] + firstWidth];
   var down = [up[0], up[1] + firstWidth];
   var right = [left[0] + firstWidth, left[1]];
-  return  new Sierpinski(level, up, down, left, right);
-}
-
-function Sierpinski(level, up, down, left, right){
-  this.Rotation = 0;
-  this.Vertices = [];
-  this.Lines = [];
 
   var diagonalDistance = right[0] - left[0];
   level--;

@@ -57,18 +57,24 @@ function WebGL(CID, FSID, VSID){
       var LineBuffer = this.GL.createBuffer();
 			this.GL.bindBuffer(this.GL.ELEMENT_ARRAY_BUFFER, LineBuffer);
 		  this.GL.bufferData(this.GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(Object.Lines), this.GL.STATIC_DRAW);
-
+      //TODO: Gotta clean this stuff up
       //Generate The Perspective Matrix
-			var PerspectiveMatrix =
-      [1, 0, 0, 0,
-      0, -1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1];
+			var PerspectiveMatrix;
+      if(!this.perspectiveMatrix){
+        PerspectiveMatrix =
+          [1, 0, 0, 0,
+          0, -1, 0, 0,
+          0, 0, 1, 0,
+          0, 0, 0, 1];
+      }
+      else{
+        PerspectiveMatrix = this.perspectiveMatrix;
+      }
 
       //Sets the Color of the curve
 			this.GL.uniform4fv(this.GL.getUniformLocation(this.ShaderProgram, "Color"), new Float32Array(Color));
 
-      //Set The Perspective and Transformation Matrices
+      //Set The Perspective Matrix
 			var pmatrix = this.GL.getUniformLocation(this.ShaderProgram, "PerspectiveMatrix");
 			this.GL.uniformMatrix4fv(pmatrix, false, new Float32Array(PerspectiveMatrix));
 
@@ -76,6 +82,19 @@ function WebGL(CID, FSID, VSID){
 			this.GL.drawElements(this.GL.LINES, Object.Lines.length, this.GL.UNSIGNED_SHORT, 0);
 
     };
+  }
+  this.zoomPerspective = function(zoom){
+    if(!this.perspectiveMatrix){
+      this.perspectiveMatrix =
+        [zoom, 0, 0, 0,
+        0, -1 * zoom, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1];
+    }
+    else{
+      this.perspectiveMatrix[0][0] = zoom;
+      this.perspectiveMatrix[1][1] = (-1) * zoom;
+    }
   }
 }
 function MakePerspective(FOV, AspectRatio, Closest, Farest){

@@ -1,8 +1,12 @@
-
 function Conchoid(a, b, largestX, largestY){
   this.Vertices = [];
   this.Lines = [];
   this.Rotation = 0;
+  this.a = a;
+  this.b = b;
+  this.largestX = largestX;
+  this.largestY = largestY;
+  //This is a little unfair since the largestX and largestY only affect the level of zoom. However, conchoid is the only model that supports zoom so I cheated a bit
   var radians;
   var secValue;
   var radius;
