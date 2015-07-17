@@ -92,8 +92,8 @@ function WebGL(CID, FSID, VSID){
         0, 0, 0, 1];
     }
     else{
-      this.perspectiveMatrix[0][0] = zoom;
-      this.perspectiveMatrix[1][1] = (-1) * zoom;
+      this.perspectiveMatrix[0] = zoom;
+      this.perspectiveMatrix[5] = (-1) * zoom;
     }
   }
 }

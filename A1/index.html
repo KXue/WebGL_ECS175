@@ -12,7 +12,7 @@
   </canvas>
   <ul class = "tabs">
     <li>
-      <input type = "radio" name="tabs" id="tab1" checked />
+      <input type = "radio" name="tabs" id="tab1" checked onchange = "SierpinskiChecked()"/>
       <label for="tab1">Sierpinski</label>
       <div id="tab-content1" class="tab-content">
         <label for "level-slider">Levels: (1-7)</label>
@@ -27,6 +27,19 @@
         <br>
         <label for "side-length">Side Length: </label>
         <input id="side-length" type = "number" min = "0" max = "2.0" oninput = "SideLengthChange()" value = "2.0"/>
+      </div>
+    </li>
+    <li>
+      <input type = "radio" name="tabs" id="tab2" onchange = "ConchoidChecked()"/>
+      <label for="tab2">Conchoid of Nicomedes</label>
+      <div id="tab-content2" class="tab-content">
+        <label for "conch-a">a: </label>
+        <input id = "conch-a" type = "number" oninput = "ConchoidAChange()" value = "1.0"/>
+        <label for "conch-b">b: </label>
+        <input id = "conch-b" type = "number" oninput = "ConchoidBChange()" value = "1.0"/>
+        <br>
+        <label for "max-value">Max value: </label>
+        <input id = "max-value" type = "number" oninput = "ZoomChange()" value = "1.0"/>
       </div>
     </li>
   </ul>

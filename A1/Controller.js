@@ -1,10 +1,11 @@
 //USE OFFSETX & OFFSETY FOR MOUSE STUFF
 
 var Color;
-var currentObject;
+var CurrentObject;
 var SierpinskiObject;
 var ConchoidObject;
 var ChaikinObject;
+var CurrentZoom = 1;
 
 function Ready(){
   GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
@@ -12,7 +13,7 @@ function Ready(){
   Color = [0.0, 0.0, 0.0, 1.0];
   SierpinskiObject = new Sierpinski(1, [-1.0, -1.0], 2.0);
   ConchoidObject = new Conchoid(1.0, 2.0, 1.0, 1.0);
-  currentObject = SierpinskiObject;
+  CurrentObject = SierpinskiObject;
   Update();
 }
 
@@ -28,7 +29,7 @@ function resetZoom(){
 
 function Update(){
   GL.GL.clear(16384 | 256);
-  GL.Draw(currentObject, Color)
+  GL.Draw(CurrentObject, Color)
 }
 
 function ColorChange(){
@@ -53,6 +54,7 @@ function ColorChange(){
 }
 
 function LevelChange(){
+  resetZoom();
   var value = document.getElementById("level-slider");
   var valueLabel = value.nextSibling.nextSibling;
   valueLabel.innerHTML = value.value;
@@ -60,18 +62,19 @@ function LevelChange(){
   var y = SierpinskiObject.boundY;
   var sideLength = SierpinskiObject.sideLength;
   SierpinskiObject = new Sierpinski(value.value, [x, y], sideLength);
-  currentObject = SierpinskiObject;
+  CurrentObject = SierpinskiObject;
   Update();
 }
 
 function BoundXChange(){
   var value = parseFloat(document.getElementById("bound-x").value);
   if(!isNaN(value)){
+    resetZoom();
     var level = SierpinskiObject.level;
     var y = SierpinskiObject.boundY;
     var sideLength = SierpinskiObject.sideLength;
     SierpinskiObject = new Sierpinski(level, [value, y], sideLength);
-    currentObject = SierpinskiObject;
+    CurrentObject = SierpinskiObject;
     Update();
   }
 }
@@ -79,11 +82,12 @@ function BoundXChange(){
 function BoundYChange(){
   var value = parseFloat(document.getElementById("bound-y").value);
   if(!isNaN(value)){
+    resetZoom();
     var level = SierpinskiObject.level;
     var x = SierpinskiObject.boundX;
     var sideLength = SierpinskiObject.sideLength;
     SierpinskiObject = new Sierpinski(level, [x, value], sideLength);
-    currentObject = SierpinskiObject;
+    CurrentObject = SierpinskiObject;
     Update();
   }
 }
@@ -91,13 +95,54 @@ function BoundYChange(){
 function SideLengthChange(){
   var value = parseFloat(document.getElementById("side-length").value);
   if(!isNaN(value)){
+    resetZoom();
     var level = SierpinskiObject.level;
     var x = SierpinskiObject.boundX;
     var y = SierpinskiObject.boundY;
     SierpinskiObject = new Sierpinski(level, [x, y], value);
-    currentObject = SierpinskiObject;
+    CurrentObject = SierpinskiObject;
     Update();
   }
+}
+
+function ConchoidAChange(){
+  var value = parseFloat(document.getElementById("conch-a").value);
+  if(!isNaN(value)){
+    var b = ConchoidObject.b;
+    ConchoidObject = new Conchoid(value, b, 1.0, 1.0);
+    CurrentObject = ConchoidObject;
+    Update();
+  }
+}
+
+function ConchoidBChange(){
+  var value = parseFloat(document.getElementById("conch-b").value);
+  if(!isNaN(value)){
+    var a = ConchoidObject.a;
+    ConchoidObject = new Conchoid(a, value, 1.0, 1.0);
+    CurrentObject = ConchoidObject;
+    Update();
+  }
+}
+
+function ZoomChange(){
+  var value = parseFloat(document.getElementById("max-value").value);
+  if(!isNaN(value)){
+    setZoom(1.0/value);
+    CurrentZoom = value;
+  }
+}
+
+function ConchoidChecked(){
+  CurrentObject = ConchoidObject;
+  setZoom(1.0/CurrentZoom);
+  Update();
+}
+
+function SierpinskiChecked(){
+  CurrentObject = SierpinskiObject;
+  resetZoom();
+  Update()
 }
 
 function AddClickEvent(CanvasID){
