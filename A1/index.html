@@ -5,6 +5,7 @@
   <script src="Sierpinski.js" type="text/javascript"></script>
   <script src="Conchoid.js" type="text/javascript"></script>
   <script src="Controller.js" type="text/javascript"></script>
+  <script src="Chaikin.js" type="text/javascript"></script>
 </head>
 <body onload = "Ready()">
   <canvas id="GLCanvas" width="600" height="600">
@@ -36,10 +37,21 @@
         <label for "conch-a">a: </label>
         <input id = "conch-a" type = "number" oninput = "ConchoidAChange()" value = "1.0"/>
         <label for "conch-b">b: </label>
-        <input id = "conch-b" type = "number" oninput = "ConchoidBChange()" value = "1.0"/>
+        <input id = "conch-b" type = "number" oninput = "ConchoidBChange()" value = "2.0"/>
         <br>
         <label for "max-value">Max value: </label>
         <input id = "max-value" type = "number" oninput = "ZoomChange()" value = "1.0"/>
+      </div>
+    </li>
+    <li>
+      <input type = "radio" name="tabs" id="tab3" onchange = "ChaikinChecked()"/>
+      <label for="tab3">Chaikin's Curve (Outline)</label>
+      <div id="tab-content3" class="tab-content">
+        Draw your control points! Curve automatically closes.
+        <br>
+        <label for "back-button">Level: 0 </label>
+        <button id = "back-button" onclick = "DivideBack()">-</button>
+        <button id = "forward-button" onclick = "DivideForward()">+</button>
       </div>
     </li>
   </ul>

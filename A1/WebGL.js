@@ -49,7 +49,6 @@ function WebGL(CID, FSID, VSID){
 
 			// Fill it With the Data
 			this.GL.bufferData(this.GL.ARRAY_BUFFER, new Float32Array(Object.Vertices), this.GL.STATIC_DRAW);
-      console.log(Object);
 
       //Connect Buffer To Shader's attribute
       this.GL.vertexAttribPointer(this.VertexPosition, 2, this.GL.FLOAT, false, 0, 0);

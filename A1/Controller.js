@@ -13,7 +13,8 @@ function Ready(){
   Color = [0.0, 0.0, 0.0, 1.0];
   SierpinskiObject = new Sierpinski(1, [-1.0, -1.0], 2.0);
   ConchoidObject = new Conchoid(1.0, 2.0, 1.0, 1.0);
-  CurrentObject = SierpinskiObject;
+  ChaikinObject = new Chaikin();
+  CurrentObject = ChaikinObject;
   Update();
 }
 
@@ -55,6 +56,7 @@ function ColorChange(){
 
 function LevelChange(){
   resetZoom();
+  document.getElementById("tab1").checked = true;
   var value = document.getElementById("level-slider");
   var valueLabel = value.nextSibling.nextSibling;
   valueLabel.innerHTML = value.value;
@@ -67,6 +69,7 @@ function LevelChange(){
 }
 
 function BoundXChange(){
+  document.getElementById("tab1").checked = true;
   var value = parseFloat(document.getElementById("bound-x").value);
   if(!isNaN(value)){
     resetZoom();
@@ -80,6 +83,7 @@ function BoundXChange(){
 }
 
 function BoundYChange(){
+  document.getElementById("tab1").checked = true;
   var value = parseFloat(document.getElementById("bound-y").value);
   if(!isNaN(value)){
     resetZoom();
@@ -93,6 +97,7 @@ function BoundYChange(){
 }
 
 function SideLengthChange(){
+  document.getElementById("tab1").checked = true;
   var value = parseFloat(document.getElementById("side-length").value);
   if(!isNaN(value)){
     resetZoom();
@@ -106,6 +111,7 @@ function SideLengthChange(){
 }
 
 function ConchoidAChange(){
+  document.getElementById("tab2").checked = true;
   var value = parseFloat(document.getElementById("conch-a").value);
   if(!isNaN(value)){
     var b = ConchoidObject.b;
@@ -116,6 +122,7 @@ function ConchoidAChange(){
 }
 
 function ConchoidBChange(){
+  document.getElementById("tab2").checked = true;
   var value = parseFloat(document.getElementById("conch-b").value);
   if(!isNaN(value)){
     var a = ConchoidObject.a;
@@ -126,6 +133,7 @@ function ConchoidBChange(){
 }
 
 function ZoomChange(){
+  document.getElementById("tab2").checked = true;
   var value = parseFloat(document.getElementById("max-value").value);
   if(!isNaN(value)){
     setZoom(1.0/value);
@@ -145,12 +153,37 @@ function SierpinskiChecked(){
   Update()
 }
 
+function ChaikinChecked(){
+  CurrentObject = ChaikinObject;
+  resetZoom();
+  Update();
+}
+
+function DivideBack(){
+  document.getElementById("tab3").checked = true;
+  ChaikinObject.Back();
+  Update();
+  document.getElementById("back-button").previousSibling.previousSibling.innerHTML = "Level: " + ChaikinObject.Order + " ";
+}
+
+function DivideForward(){
+  document.getElementById("tab3").checked = true;
+  console.log(ChaikinObject.Vertices);
+  ChaikinObject.Divide();
+  Update();
+  document.getElementById("back-button").previousSibling.previousSibling.innerHTML = "Level: " + ChaikinObject.Order + " ";
+}
+
 function AddClickEvent(CanvasID){
     var canvas = document.getElementById(CanvasID);
     canvas.addEventListener('click', function(event) {
-      var x = event.offsetX,
-          y = event.offsetY;
-      console.log(event);
-      console.log(x + " " + y)
+      if(CurrentObject == ChaikinObject){
+        var x = event.offsetX,
+            y = event.offsetY;
+        ChaikinObject.AddPoint((2 * x / canvas.width) - 1.0, (2 * y / canvas.height) - 1.0);
+        console.log(x);
+        console.log(y);
+        Update();
+      }
     });
 }
