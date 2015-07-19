@@ -14,7 +14,7 @@ function Ready(){
   SierpinskiObject = new Sierpinski(1, [-1.0, -1.0], 2.0);
   ConchoidObject = new Conchoid(1.0, 2.0, 1.0, 1.0);
   ChaikinObject = new Chaikin();
-  CurrentObject = ChaikinObject;
+  CurrentObject = SierpinskiObject;
   Update();
 }
 

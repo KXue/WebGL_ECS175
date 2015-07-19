@@ -28,7 +28,6 @@ function Chaikin(){
 
   this.Divide = function(){
     if(this.Lines.length >= 2){
-      console.log(this);
       if(this.Changed || this.Order >= this.VerticesArray.length){
         var nextVertices = [];
         var nextLines = [];
@@ -58,8 +57,6 @@ function Chaikin(){
           this.LinesArray[this.Order - 1] = this.Lines;
           this.Changed = true;
         }
-        console.log(nextVertices);
-        console.log(nextLines);
         this.Vertices = nextVertices;
         this.Lines = nextLines;
       }
