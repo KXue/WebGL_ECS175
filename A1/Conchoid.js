@@ -6,6 +6,12 @@ function Conchoid(a, b, largestX, largestY){
   this.b = b;
   this.largestX = largestX;
   this.largestY = largestY;
+  this.modelMatrix =
+  [1, 0, 0, 0,
+  0, 1, 0, 0,
+  0, 0, 1, 0,
+  0, 0, 0, 1];
+
   //This is a little unfair since the largestX and largestY only affect the level of zoom. However, conchoid is the only model that supports zoom so I cheated a bit
   var radians;
   var secValue;
@@ -49,6 +55,11 @@ function Conchoid(a, b, largestX, largestY){
   }
   this.Lines.push(0);
   this.Lines.push(this.Vertices.length / 2.0 - 1);
+
+  this.zoom = function(zoom){
+    this.modelMatrix[0] = zoom;
+    this.modelMatrix[5] = zoom;
+  }
 }
 
 function PolarToCartesian(radius, theta, largestX, largestY){

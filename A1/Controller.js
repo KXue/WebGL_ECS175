@@ -19,12 +19,9 @@ function Ready(){
 }
 
 function setZoom(zoom){
-  GL.zoomPerspective(zoom);
-  Update();
-}
-
-function resetZoom(){
-  setZoom(1.0);
+  ConchoidObject.zoom(zoom);
+  document.getElementById("tab2").checked = true;
+  CurrentObject = ConchoidObject;
   Update();
 }
 
@@ -55,7 +52,6 @@ function ColorChange(){
 }
 
 function LevelChange(){
-  resetZoom();
   document.getElementById("tab1").checked = true;
   var value = document.getElementById("level-slider");
   var valueLabel = value.nextSibling.nextSibling;
@@ -72,7 +68,6 @@ function BoundXChange(){
   document.getElementById("tab1").checked = true;
   var value = parseFloat(document.getElementById("bound-x").value);
   if(!isNaN(value)){
-    resetZoom();
     var level = SierpinskiObject.level;
     var y = SierpinskiObject.boundY;
     var sideLength = SierpinskiObject.sideLength;
@@ -86,7 +81,6 @@ function BoundYChange(){
   document.getElementById("tab1").checked = true;
   var value = parseFloat(document.getElementById("bound-y").value);
   if(!isNaN(value)){
-    resetZoom();
     var level = SierpinskiObject.level;
     var x = SierpinskiObject.boundX;
     var sideLength = SierpinskiObject.sideLength;
@@ -100,7 +94,6 @@ function SideLengthChange(){
   document.getElementById("tab1").checked = true;
   var value = parseFloat(document.getElementById("side-length").value);
   if(!isNaN(value)){
-    resetZoom();
     var level = SierpinskiObject.level;
     var x = SierpinskiObject.boundX;
     var y = SierpinskiObject.boundY;
@@ -149,13 +142,11 @@ function ConchoidChecked(){
 
 function SierpinskiChecked(){
   CurrentObject = SierpinskiObject;
-  resetZoom();
   Update()
 }
 
 function ChaikinChecked(){
   CurrentObject = ChaikinObject;
-  resetZoom();
   Update();
 }
 

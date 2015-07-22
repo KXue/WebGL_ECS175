@@ -9,6 +9,11 @@ function WebGL(CID, FSID, VSID){
 		this.GL.enable(this.GL.DEPTH_TEST); //Enable Depth Testing
 		this.GL.depthFunc(this.GL.LEQUAL); //Set Perspective View
 		this.AspectRatio = canvas.width / canvas.height;
+    this.defaultModelMatrix =
+    [1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1];
 
 		var FShader = document.getElementById(FSID);
 		var VShader = document.getElementById(VSID);
@@ -58,17 +63,11 @@ function WebGL(CID, FSID, VSID){
 		  this.GL.bufferData(this.GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(Object.Lines), this.GL.STATIC_DRAW);
       //TODO: Gotta clean this stuff up
       //Generate The Perspective Matrix
-			var PerspectiveMatrix;
-      if(!this.perspectiveMatrix){
-        PerspectiveMatrix =
-          [1, 0, 0, 0,
+      var PerspectiveMatrix =
+        [1, 0, 0, 0,
           0, -1, 0, 0,
           0, 0, 1, 0,
           0, 0, 0, 1];
-      }
-      else{
-        PerspectiveMatrix = this.perspectiveMatrix;
-      }
 
       //Sets the Color of the curve
 			this.GL.uniform4fv(this.GL.getUniformLocation(this.ShaderProgram, "Color"), new Float32Array(Color));
@@ -77,23 +76,22 @@ function WebGL(CID, FSID, VSID){
 			var pmatrix = this.GL.getUniformLocation(this.ShaderProgram, "PerspectiveMatrix");
 			this.GL.uniformMatrix4fv(pmatrix, false, new Float32Array(PerspectiveMatrix));
 
+      var modelMatrix;
+
+      if(Object.modelMatrix){
+        modelMatrix = Object.modelMatrix;
+      }
+      else{
+        modelMatrix = this.defaultModelMatrix;
+      }
+
+      var mMatrix = this.GL.getUniformLocation(this.ShaderProgram, "ModelMatrix");
+      this.GL.uniformMatrix4fv(mMatrix, false, new Float32Array(modelMatrix));
+
       //Draw The Lines
 			this.GL.drawElements(this.GL.LINES, Object.Lines.length, this.GL.UNSIGNED_SHORT, 0);
 
     };
-  }
-  this.zoomPerspective = function(zoom){
-    if(!this.perspectiveMatrix){
-      this.perspectiveMatrix =
-        [zoom, 0, 0, 0,
-        0, -1 * zoom, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1];
-    }
-    else{
-      this.perspectiveMatrix[0] = zoom;
-      this.perspectiveMatrix[5] = (-1) * zoom;
-    }
   }
 }
 function MakePerspective(FOV, AspectRatio, Closest, Farest){

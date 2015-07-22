@@ -58,12 +58,12 @@
   <label for "color-input">Color: </label><input id = "color-input" type="text" name="Color" maxlength = "9" onkeyup = "ColorChange()"/>
   <script id="VertexShader" type="x-shader/x-vertex">
     attribute highp vec2 VertexPosition;
-
+    uniform highp mat4 ModelMatrix;
     uniform highp mat4 PerspectiveMatrix;
 
     void main(void) {
       gl_PointSize = 3.0;
-			gl_Position = PerspectiveMatrix * vec4(VertexPosition, -1.0, 1.0);
+			gl_Position = ModelMatrix * PerspectiveMatrix * vec4(VertexPosition, -1.0, 1.0);
 		}
   </script>
   <script id="FragmentShader" type="x-shader/x-fragment">
