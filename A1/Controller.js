@@ -152,17 +152,29 @@ function ChaikinChecked(){
 
 function DivideBack(){
   document.getElementById("tab3").checked = true;
-  ChaikinObject.Back();
+  ChaikinObject.setLevel(ChaikinObject.Levels - 1);
   Update();
-  document.getElementById("back-button").previousSibling.previousSibling.innerHTML = "Level: " + ChaikinObject.Order + " ";
+  document.getElementById("back-button").previousSibling.previousSibling.innerHTML = "Level: " + ChaikinObject.Levels + " ";
 }
 
 function DivideForward(){
   document.getElementById("tab3").checked = true;
-  console.log(ChaikinObject.Vertices);
-  ChaikinObject.Divide();
+  ChaikinObject.setLevel(ChaikinObject.Levels + 1);
   Update();
-  document.getElementById("back-button").previousSibling.previousSibling.innerHTML = "Level: " + ChaikinObject.Order + " ";
+  document.getElementById("back-button").previousSibling.previousSibling.innerHTML = "Level: " + ChaikinObject.Levels + " ";
+}
+
+function toggleOpenClose(){
+  ChaikinObject.toggleOpen();
+  if(ChaikinObject.Closed){
+    document.getElementById("closed-open-button").innerHTML = "Closed";
+  }
+  else{
+    document.getElementById("closed-open-button").innerHTML = "Open";
+  }
+  Update();
+  document.getElementById("tab3").checked = true;
+
 }
 
 function AddClickEvent(CanvasID){
@@ -172,8 +184,6 @@ function AddClickEvent(CanvasID){
         var x = event.offsetX,
             y = event.offsetY;
         ChaikinObject.AddPoint((2 * x / canvas.width) - 1.0, (2 * y / canvas.height) - 1.0);
-        console.log(x);
-        console.log(y);
         Update();
       }
     });

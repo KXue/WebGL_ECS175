@@ -2,86 +2,63 @@ function Chaikin(){
   this.Rotation = 0;
   this.Lines = [];
   this.Vertices = [];
-  this.LinesArray = [];
-  this.VerticesArray = [];
-  this.Order = 1;
-  this.Changed = false;
+  this.controlVertices = [];
+  this.Levels = 1;
+  this.Closed = true;
+
+  this.toggleOpen = function(){
+    this.Closed = !this.Closed;
+    this.levelsDivide(this.controlVertices, this.Levels);
+  }
 
   this.AddPoint = function(x, y){
-    this.Changed = true;
-    this.Vertices.push(x);
-    this.Vertices.push(y);
-    if(this.Vertices.length >= 4){
-        if(this.Lines.length <= 2){
-          this.Lines.push(this.Vertices.length / 2.0 - 2);
-          this.Lines.push(this.Vertices.length / 2.0 - 1);
-        }
-        else{
-          this.Lines[this.Lines.length - 2] = this.Vertices.length / 2.0 - 2;
-          this.Lines[this.Lines.length - 1] = this.Vertices.length / 2.0 - 1;
-        }
+    this.controlVertices.push(x);
+    this.controlVertices.push(y);
+    this.levelsDivide(this.controlVertices, this.Levels);
+  };
 
-        this.Lines.push(this.Vertices.length / 2 - 1);
+  this.setLevel = function(level){
+    this.Levels = level;
+    this.levelsDivide(this.controlVertices, this.Levels);
+  }
+
+  this.levelsDivide = function(controlPoints, level){
+    var length = controlPoints.length / 2.0;
+    var maxValue = controlPoints.length;
+    var newControlPoints = []
+    if(!this.Closed){
+      length --;
+      newControlPoints.push(controlPoints[0]);
+      newControlPoints.push(controlPoints[1]);
+    }
+    console.log(controlPoints);
+    console.log(level);
+    console.log(length);
+    for(i = 0; i < length; i++){
+      var firstPoint = [controlPoints[i * 2], controlPoints[i * 2 + 1]];
+      var secondPoint = [controlPoints[((i + 1) * 2) % maxValue], controlPoints[((i + 1) * 2 + 1) % maxValue]];
+      Array.prototype.push.apply(newControlPoints, FractionPoint(firstPoint, secondPoint, 0.75));
+      Array.prototype.push.apply(newControlPoints, FractionPoint(firstPoint, secondPoint, 0.25));
+    }
+    if(!this.Closed){
+      newControlPoints.push(controlPoints[controlPoints.length - 2]);
+      newControlPoints.push(controlPoints[controlPoints.length - 1]);
+    }
+    console.log(newControlPoints)
+    if(level == 1){
+      this.Vertices = newControlPoints;
+      this.Lines = [];
+      for(i = 0; i < this.Vertices.length/2.0 - 1; i++){
+        this.Lines.push(i);
+        this.Lines.push(i+1);
+      }
+      if(this.Closed){
+        this.Lines.push(this.Vertices.length/2.0 - 1);
         this.Lines.push(0);
+      }
     }
-  }
-
-  this.Divide = function(){
-    if(this.Lines.length >= 2){
-      if(this.Changed || this.Order >= this.VerticesArray.length){
-        var nextVertices = [];
-        var nextLines = [];
-        var newPoint = [];
-        for (i = 0; i < this.Lines.length; i += 2){
-          newPoint = FractionPoint([this.Vertices[this.Lines[i] * 2], this.Vertices[this.Lines[i] * 2 + 1]], [this.Vertices[this.Lines[i + 1] * 2], this.Vertices[this.Lines[i + 1] * 2 + 1]], 0.75);
-          nextVertices.push(newPoint[0]);
-          nextVertices.push(newPoint[1]);
-          newPoint = FractionPoint([this.Vertices[this.Lines[i] * 2], this.Vertices[this.Lines[i] * 2 + 1]], [this.Vertices[this.Lines[i + 1] * 2], this.Vertices[this.Lines[i + 1] * 2 + 1]], 0.25);
-          nextVertices.push(newPoint[0]);
-          nextVertices.push(newPoint[1]);
-        }
-        for(i = 0; i < nextVertices.length / 2.0 - 1; i++){
-          nextLines.push(i);
-          nextLines.push(i+1);
-        }
-        nextLines.push(nextVertices.length / 2.0 - 1);
-        nextLines.push(0);
-
-        if(this.Order >= this.VerticesArray.length){
-          this.VerticesArray.push(this.Vertices);
-          this.LinesArray.push(this.Lines);
-          this.Changed = false;
-        }
-        else{
-          this.VerticesArray[this.Order - 1] = this.Vertices;
-          this.LinesArray[this.Order - 1] = this.Lines;
-          this.Changed = true;
-        }
-        this.Vertices = nextVertices;
-        this.Lines = nextLines;
-      }
-      else{
-        this.Vertices = this.VerticesArray[this.Order];
-        this.Lines = this.LinesArray[this.Order];
-      }
-      this.Order ++;
-    }
-  }
-
-  this.Back = function(){
-    if(this.Order > 1){
-      this.Order --;
-      if(this.Order >= this.VerticesArray.length){
-        this.VerticesArray.push(this.Vertices);
-        this.LinesArray.push(this.Lines);
-      }
-      else if (this.Changed){
-        this.VerticesArray[this.Order] = this.Vertices;
-        this.LinesArray[this.Order] = this.Lines;
-      }
-      this.Vertices = this.VerticesArray[this.Order - 1];
-      this.Lines = this.LinesArray[this.Order - 1];
-      this.Changed = false;
+    else{
+      this.levelsDivide(newControlPoints, level - 1);
     }
   }
 }
