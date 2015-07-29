@@ -27,28 +27,28 @@ function vec4Mat4Multiply(vector, matrix){
   }
   return newVector;
 }
-function createTranslateMatrix(xyzArray){
+function createTranslateMatrix(x, y, z){
   return([
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 1, 0,
-    xyzArray[0], xyzArray[1], xyzArray[2], 1
+    x, y, z, 1
   ]);
 }
-function createScaleMatrix(xyzZoom){
+function createScaleMatrix(x, y, z){
   return([
-    xyzZoom[0], 0, 0, 0,
-    0, xyzZoom[1], 0, 0,
-    0, 0, xyzZoom[2], 0,
+    x, 0, 0, 0,
+    0, y, 0, 0,
+    0, 0, z, 0,
     0, 0, 0, 1
   ]);
 }
 
 //convention: applied x -> y -> z == (Z * Y) * X
-function createRotateMatrix(xyzRotation){
-  xTheta = xyzRotation[0] * Math.PI / 180.0;
-  yTheta = xyzRotaiton[1] * Math.PI / 180.0;
-  zTheta = xyzRotation[2] * Math.PI / 180.0;
+function createRotateMatrix(x, y, z){
+  xTheta = x * Math.PI / 180.0;
+  yTheta = y * Math.PI / 180.0;
+  zTheta = z * Math.PI / 180.0;
 
   var xRotationMatrix = [
     1, 0, 0, 0,
@@ -72,26 +72,29 @@ function createRotateMatrix(xyzRotation){
 }
 //for more control on the order of operations
 function createXRotationMatrix(theta){
+  var radians = theta * Math.PI / 180.0;
   return [
     1, 0, 0, 0,
-    0, Math.cos(theta), Math.sin(theta), 0,
-    0, -Math.sin(theta), Math.cos(theta), 0,
+    0, Math.cos(radians), Math.sin(radians), 0,
+    0, -Math.sin(radians), Math.cos(radians), 0,
     0, 0, 0, 1
   ];
 }
 
 function createYRotationMatrix(theta){
+  var radians = theta * Math.PI / 180.0;
   return [
-    Math.cos(theta), 0, -Math.sin(theta), 0,
+    Math.cos(radians), 0, -Math.sin(radians), 0,
     0, 1, 0, 0,
-    Math.sin(theta), 0, Math.cos(theta), 0,
+    Math.sin(radians), 0, Math.cos(radians), 0,
     0, 0, 0, 1
   ];
 }
 function createZRotationMatrix(theta){
+  var radians = theta * Math.PI / 180.0;
   return [
-    Math.cos(theta), Math.sin(theta), 0, 0,
-    -Math.sin(theta), Math.cos(theta), 0, 0,
+    Math.cos(radians), Math.sin(radians), 0, 0,
+    -Math.sin(radians), Math.cos(radians), 0, 0,
     0, 0, 1, 0,
     0, 0, 0, 1
   ];
@@ -117,6 +120,10 @@ function createTransformMatrix(transformStack){
 }
 
 function ready(){
-  console.log(mat4Multiply(createXRotationMatrix(Math.PI/2.0), createYRotationMatrix(Math.PI/2.0)));
-  console.log(mat4Multiply(createYRotationMatrix(Math.PI/2.0), createXRotationMatrix(Math.PI/2.0)));
+  GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
+  GL.makePerspective(1, 10000, 45, 1);
+  var cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
+  cylinder.createCylinder(1.0, 1.0, 10);
+  cylinder.translate(0, 0, -6);
+  cylinder.draw(GL);
 }

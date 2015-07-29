@@ -18,8 +18,7 @@
     uniform highp mat4 cameraTransformMatrix;
 
     void main(void) {
-      gl_PointSize = 3.0;
-			gl_Position = projectionMatrix * cameraMatrix * modelMatrix * vec4(vertexPosition, 0.0, 1.0);
+			gl_Position = projectionMatrix * cameraTransformMatrix * modelMatrix * vertexPosition;
 		}
   </script>
   <script id="FragmentShader" type="x-shader/x-fragment">

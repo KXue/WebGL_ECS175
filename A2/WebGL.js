@@ -20,13 +20,13 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
 		else
 		{
       //Load and Compile Fragment Shader
-			var Code = LoadShader(fragmentShader);
+			var Code = loadShader(fragmentShader);
 			fragmentShader = this.GL.createShader(this.GL.FRAGMENT_SHADER);
 			this.GL.shaderSource(fragmentShader, Code);
 			this.GL.compileShader(fragmentShader);
 
 			//Load and Compile Vertex Shader
-			Code = LoadShader(vertexShader);
+			Code = loadShader(vertexShader);
 			vertexShader = this.GL.createShader(this.GL.VERTEX_SHADER);
 			this.GL.shaderSource(vertexShader, Code);
 			this.GL.compileShader(vertexShader);
@@ -39,7 +39,7 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
 			this.GL.useProgram(this.ShaderProgram);
 
 			//Link Vertex Position Attribute from Shader
-			this.VertexPosition = this.GL.getAttribLocation(this.ShaderProgram, "VertexPosition");
+			this.VertexPosition = this.GL.getAttribLocation(this.ShaderProgram, "vertexPosition");
 			this.GL.enableVertexAttribArray(this.VertexPosition);
     }
   }
@@ -65,11 +65,11 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
   };
 
   this.translate = function(x, y, z){
-    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createTranslateMatrix(x, y, z));
+    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createTranslateMatrix(-x, -y, -z));
   };
 
   this.rotate = function(x, y, z){
-    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createRotateMatrix(x, y, z));
+    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createRotateMatrix(-x, -y, -z));
   };
 
   //forward = -z, up = +y, left = -x? not sure about left/right but pretty sure about y & z
@@ -82,4 +82,16 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
     }
     this.translate(directionVector[0], directionVector[1], directionVector[2]);
   };
+}
+
+function loadShader(Script){
+	var Code = "";
+	var CurrentChild = Script.firstChild;
+	while(CurrentChild)
+	{
+		if(CurrentChild.nodeType == CurrentChild.TEXT_NODE)
+			Code += CurrentChild.textContent;
+		CurrentChild = CurrentChild.nextSibling;
+	}
+	return Code;
 }
