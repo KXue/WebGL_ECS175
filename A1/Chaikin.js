@@ -15,7 +15,7 @@ function Chaikin(){
     this.controlVertices.push(x);
     this.controlVertices.push(y);
     this.levelsDivide(this.controlVertices, this.Levels);
-  };
+  }
 
   this.setLevel = function(level){
     this.Levels = level;

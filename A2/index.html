@@ -12,10 +12,10 @@
 
 
   <script id="VertexShader" type="x-shader/x-vertex">
-    attribute highp vec2 vertexPosition;
+    attribute highp vec4 vertexPosition;
     uniform highp mat4 modelMatrix;
     uniform highp mat4 projectionMatrix;
-    uniform highp mat4 cameraMatrix;
+    uniform highp mat4 cameraTransformMatrix;
 
     void main(void) {
       gl_PointSize = 3.0;

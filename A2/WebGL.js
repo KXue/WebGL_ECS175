@@ -9,6 +9,8 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
 		this.GL.enable(this.GL.DEPTH_TEST); //Enable Depth Testing
 		this.GL.depthFunc(this.GL.LEQUAL); //Set Perspective View
     this.aspectRatio = canvas.width / canvas.height;
+    this.perspectiveMatrix = identityMatrix;
+    this.cameraTransformMatrix = identityMatrix;
 
     var fragmentShader = document.getElementById(fragmentShaderID);
 		var vertexShader = document.getElementById(vertexShaderID);
@@ -40,9 +42,44 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
 			this.VertexPosition = this.GL.getAttribLocation(this.ShaderProgram, "VertexPosition");
 			this.GL.enableVertexAttribArray(this.VertexPosition);
     }
+  }
+
+  this.draw = function(modelDrawMethod){
+    modelDrawMethod(this);
   };
 
-  this.Draw = function(modelDrawMethod){
-    modelDrawMethod(this);
+  this.resetTransform = function(){
+    this.cameraTransformMatrix = identityMatrix;
+  };
+
+  this.makePerspective = function(near, far, angle, ratio){
+    var view = 1.0 / Math.tan(angle * Math.PI / 360.0);
+    var a = (far + near) / (far - near);
+    var b = 2 * near * far / (far - near);
+    this.perspectiveMatrix = [
+      view, 0, 0, 0,
+      0, ratio * view, 0, 0,
+      0, 0, a, -1,
+      0, 0, b, 0
+    ];
+  };
+
+  this.translate = function(x, y, z){
+    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createTranslateMatrix(x, y, z));
+  };
+
+  this.rotate = function(x, y, z){
+    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createRotateMatrix(x, y, z));
+  };
+
+  //forward = -z, up = +y, left = -x? not sure about left/right but pretty sure about y & z
+  //4th number of directionVector = 0
+  //directionVector is normalized
+  this.directionalTranslate = function(magnitude, directionVector){
+    var rotatedUnitVector = vec4Mat4Multiply(directionVector, this.cameraTransformMatrix);
+    for(i = 0; i < 4; i++){
+      directionVector[i] *= magnitude;
+    }
+    this.translate(directionVector[0], directionVector[1], directionVector[2]);
   };
 }
