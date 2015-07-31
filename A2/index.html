@@ -9,7 +9,23 @@
   <canvas id="GLCanvas" width="700" height="700">
       Your Browser Doesn't Support HTML5's Canvas.
   </canvas>
-
+  <div>
+    <label for "FOV-slider">FOV: (1-90)</label>
+    <input id = "FOV-slider" type = "range" min = "1" max = "90" step = "1" oninput = "onFOVChanged()" value = "45"/>
+    <label for "FOV-slider">45</label>
+    <br>
+    <label for "near">Near:</label>
+    <input id = "near" type = "number" oninput = "onNearChange()" value = "1.0"/>
+    <br>
+    <label for "far">Far:</label>
+    <input id = "far" type = "number" oninput = "onFarChange()" value = "10000"/>
+    <br>
+    <label for "width">Width:</label>
+    <input id = "width" type = "number" min = "0.0" oninput = "onWidthChange()" value = "700"/>
+    <br>
+    <label for "height">Height:</label>
+    <input id = "height" type = "number" min = "0.0" oninput = "onHeightChange()" value = "700"/>
+  </div>
 
   <script id="VertexShader" type="x-shader/x-vertex">
     attribute highp vec4 vertexPosition;

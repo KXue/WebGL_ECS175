@@ -134,7 +134,7 @@ function ready(){
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
   GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
-  GL.makePerspective(1, 10000, 45, canvasWidth / canvasHeight);
+  GL.makePerspective();
   document.addEventListener("keydown", onKeyDown, true);
   document.addEventListener("keyup", onKeyUp, true);
   canvas.addEventListener("mousewheel", onMouseWheel, false);
@@ -224,4 +224,48 @@ function onMouseMove(event){
 
 function onMouseUp(event){
   drag = false;
+}
+
+function onFOVChanged(){
+  var value = document.getElementById("FOV-slider");
+  GL.FOV = value.value;
+  var valueLabel = value.nextSibling.nextSibling;
+  valueLabel.innerHTML = value.value;
+  GL.makePerspective();
+}
+
+function onNearChange(){
+  var value = parseFloat(document.getElementById("near").value);
+  if(!isNaN(value)){
+    GL.near = value;
+    GL.makePerspective();
+  }
+}
+
+function onFarChange(){
+  var value = parseFloat(document.getElementById("far").value);
+  if(!isNaN(value)){
+    GL.far = value;
+    GL.makePerspective();
+  }
+}
+
+function onWidthChange(){
+  var value = parseFloat(document.getElementById("width").value);
+  if(!isNaN(value)){
+    canvasWidth = value;
+    (document.getElementById("GLCanvas").width = value);
+    GL.aspectRatio = canvasWidth / canvasHeight;
+    GL.makePerspective();
+  }
+}
+
+function onHeightChange(){
+  var value = parseFloat(document.getElementById("height").value);
+  if(!isNaN(value)){
+    canvasHeight = value;
+    (document.getElementById("GLCanvas").height = value);
+    GL.aspectRatio = canvasWidth / canvasHeight;
+    GL.makePerspective();
+  }
 }

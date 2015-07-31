@@ -9,6 +9,9 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
 		this.GL.enable(this.GL.DEPTH_TEST); //Enable Depth Testing
 		this.GL.depthFunc(this.GL.LESS); //Set Perspective View
     this.aspectRatio = canvas.width / canvas.height;
+    this.FOV = 45;
+    this.near = 1;
+    this.far = 10000;
     this.perspectiveMatrix = identityMatrix;
     this.moveDirection = [0, 0, 0, 0];
     this.cameraTransformMatrix = identityMatrix;
@@ -49,13 +52,13 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
     this.cameraTransformMatrix = identityMatrix;
   };
 
-  this.makePerspective = function(near, far, angle, ratio){
-    var view = 1.0 / Math.tan(angle * Math.PI / 360.0);
-    var a = (far + near) / (near - far);
-    var b = 2 * near * far / (near - far);
+  this.makePerspective = function(){
+    var view = 1.0 / Math.tan(this.FOV * Math.PI / 360.0);
+    var a = (this.far + this.near) / (this.near - this.far);
+    var b = 2 * this.near * this.far / (this.near - this.far);
     this.perspectiveMatrix = [
       view, 0, 0, 0,
-      0, ratio * view, 0, 0,
+      0, this.aspectRatio * view, 0, 0,
       0, 0, a, -1,
       0, 0, b, 0
     ];
