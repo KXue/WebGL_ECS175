@@ -7,9 +7,10 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
     this.GL = (canvas.getContext("webgl")) ? canvas.getContext("webgl") : canvas.getContext("experimental-webgl");
     this.GL.clearColor(1.0, 1.0, 1.0, 1.0); // this is the color
 		this.GL.enable(this.GL.DEPTH_TEST); //Enable Depth Testing
-		this.GL.depthFunc(this.GL.LEQUAL); //Set Perspective View
+		this.GL.depthFunc(this.GL.LESS); //Set Perspective View
     this.aspectRatio = canvas.width / canvas.height;
     this.perspectiveMatrix = identityMatrix;
+    this.moveDirection = [0, 0, 0, 0];
     this.cameraTransformMatrix = identityMatrix;
 
     var fragmentShader = document.getElementById(fragmentShaderID);
@@ -44,18 +45,14 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
     }
   }
 
-  this.draw = function(modelDrawMethod){
-    modelDrawMethod(this);
-  };
-
   this.resetTransform = function(){
     this.cameraTransformMatrix = identityMatrix;
   };
 
   this.makePerspective = function(near, far, angle, ratio){
     var view = 1.0 / Math.tan(angle * Math.PI / 360.0);
-    var a = (far + near) / (far - near);
-    var b = 2 * near * far / (far - near);
+    var a = (far + near) / (near - far);
+    var b = 2 * near * far / (near - far);
     this.perspectiveMatrix = [
       view, 0, 0, 0,
       0, ratio * view, 0, 0,
@@ -65,7 +62,7 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
   };
 
   this.translate = function(x, y, z){
-    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createTranslateMatrix(-x, -y, -z));
+    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createTranslateMatrix(-x, -y, z));
   };
 
   this.rotate = function(x, y, z){
@@ -78,9 +75,13 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
   this.directionalTranslate = function(magnitude, directionVector){
     var rotatedUnitVector = vec4Mat4Multiply(directionVector, this.cameraTransformMatrix);
     for(i = 0; i < 4; i++){
-      directionVector[i] *= magnitude;
+      rotatedUnitVector[i] *= magnitude;
     }
-    this.translate(directionVector[0], directionVector[1], directionVector[2]);
+    this.translate(rotatedUnitVector[0], rotatedUnitVector[1], rotatedUnitVector[2]);
+  };
+
+  this.updatePosition = function(){
+    this.directionalTranslate(0.1, this.moveDirection);
   };
 }
 

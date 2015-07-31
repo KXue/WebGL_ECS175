@@ -119,11 +119,109 @@ function createTransformMatrix(transformStack){
   }
 }
 
+var cylinder;
+var cylinder2;
+var canvasWidth;
+var canvasHeight;
 function ready(){
-  GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
-  GL.makePerspective(1, 10000, 45, 1);
-  var cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
-  cylinder.createCylinder(1.0, 1.0, 10);
+  cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
+  cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
+  cylinder.createCylinder(1.0, 1.0, 300);
+  cylinder2.createCylinder(1.0, 1.0, 300);
   cylinder.translate(0, 0, -6);
+  cylinder2.translate(2, 0, -6);
+  var canvas = document.getElementById("GLCanvas");
+  canvasWidth = canvas.width;
+  canvasHeight = canvas.height;
+  GL = new WebGL("GLCanvas", "FragmentShader", "VertexShader");
+  GL.makePerspective(1, 10000, 45, canvasWidth / canvasHeight);
+  document.addEventListener("keydown", onKeyDown, true);
+  document.addEventListener("keyup", onKeyUp, true);
+  canvas.addEventListener("mousewheel", onMouseWheel, false);
+  canvas.addEventListener("DOMMouseScroll", onMouseWheel, false);
+  canvas.addEventListener("mousedown", onMouseDown, false);
+  canvas.addEventListener("mousemove", onMouseMove, false);
+  canvas.addEventListener("mouseup", onMouseUp, false);
+  setInterval(update, 33);
+}
+
+function update(){
+  GL.GL.clear(16384 | 256);
+  GL.updatePosition();
+  GL.moveDirection[2] = 0;
   cylinder.draw(GL);
+  cylinder2.draw(GL);
+}
+
+var map = []; // Or you could call it "key"
+onKeyUp = onKeyDown = function(e){
+    e = e || event; // to deal with IE
+    map[e.keyCode] = e.type == 'keydown';
+    /*insert conditional here*/
+    if(map[37] || map[39]){
+      if(map[37] && map[39]){
+        if(e.keyCode == 37 && e.type == 'keydown'){
+          GL.moveDirection[0] = -1;
+        }
+        else if(e.keyCode == 39 && e.type == 'keydown'){
+          GL.moveDirection[0] = 1;
+        }
+      }
+      else if(map[37]){
+        GL.moveDirection[0] = -1;
+      }
+      else if(map[39]){
+        GL.moveDirection[0] = 1;
+      }
+    }
+    else{
+      GL.moveDirection[0] = 0;
+    }
+
+    if(map[38] || map[40]){
+      if(map[38] && map[40]){
+        if(e.keyCode == 38 && e.type == 'keydown'){
+          GL.moveDirection[1] = 1;
+        }
+        else if(e.keyCode == 40 && e.type == 'keydown'){
+          GL.moveDirection[1] = -1;
+        }
+      }
+      else if(map[38]){
+        GL.moveDirection[1] = 1;
+      }
+      else if(map[40]){
+        GL.moveDirection[1] = -1;
+      }
+    }
+    else{
+      GL.moveDirection[1] = 0;
+    }
+};
+
+function onMouseWheel(event){
+  GL.moveDirection[2] = event.wheelDelta / Math.abs(event.wheelDelta);
+}
+
+var drag = false;
+var mousePosition = [];
+function onMouseDown(event){
+  drag = true;
+  mousePosition = [event.offsetX, event.offsetY];
+}
+
+function onMouseMove(event){
+  if(drag){
+    var mouseDelta = [
+      (event.offsetY - mousePosition[1]) * 360 / canvasHeight,
+      (event.offsetX - mousePosition[0]) * 360 / canvasWidth,
+      0
+    ];
+    GL.rotate(mouseDelta[0], mouseDelta[1], mouseDelta[2]);
+    mousePosition = [event.offsetX, event.offsetY];
+  }
+}
+
+function onMouseUp(event){
+  drag = false;
 }
