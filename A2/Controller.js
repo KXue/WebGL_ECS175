@@ -123,13 +123,16 @@ var cylinder;
 var cylinder2;
 var canvasWidth;
 var canvasHeight;
+var table;
 function ready(){
   cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
   cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
-  cylinder.createCylinder(1.0, 1.0, 300);
-  cylinder2.createCylinder(1.0, 1.0, 300);
+  cylinder.createTruncatedCone(1.0, 1.0, 0.5, 300);
+  cylinder2.createTruncatedCone(1.0, -1.0, 1.0, 300);
   cylinder.translate(0, 0, -6);
   cylinder2.translate(2, 0, -6);
+  table = new Table(2.0, 2.0, 2.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
+  table.translate(0, 0, -6);
   var canvas = document.getElementById("GLCanvas");
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
@@ -149,7 +152,8 @@ function update(){
   GL.GL.clear(16384 | 256);
   GL.updatePosition();
   GL.moveDirection[2] = 0;
-  cylinder.draw(GL);
+  table.draw(GL);
+  //cylinder.draw(GL);
   cylinder2.draw(GL);
 }
 
@@ -213,8 +217,8 @@ function onMouseDown(event){
 function onMouseMove(event){
   if(drag){
     var mouseDelta = [
-      (event.offsetY - mousePosition[1]) * 360 / canvasHeight,
-      (event.offsetX - mousePosition[0]) * 360 / canvasWidth,
+      (event.offsetY - mousePosition[1]) * 180 / canvasHeight,
+      (event.offsetX - mousePosition[0]) * 180 / canvasWidth,
       0
     ];
     GL.rotate(mouseDelta[0], mouseDelta[1], mouseDelta[2]);

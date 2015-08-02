@@ -57,8 +57,8 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
     var a = (this.far + this.near) / (this.near - this.far);
     var b = 2 * this.near * this.far / (this.near - this.far);
     this.perspectiveMatrix = [
-      view, 0, 0, 0,
-      0, this.aspectRatio * view, 0, 0,
+      view * this.aspectRatio, 0, 0, 0,
+      0, view, 0, 0,
       0, 0, a, -1,
       0, 0, b, 0
     ];
@@ -69,7 +69,7 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
   };
 
   this.rotate = function(x, y, z){
-    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createRotateMatrix(-x, -y, -z));
+    this.cameraTransformMatrix = mat4Multiply(this.cameraTransformMatrix, createRotateMatrix(x, y, z));
   };
 
   //forward = -z, up = +y, left = -x? not sure about left/right but pretty sure about y & z

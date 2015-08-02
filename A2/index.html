@@ -4,14 +4,15 @@
   <script src="WebGL.js" type="text/javascript"></script>
   <script src="Controller.js" type="text/javascript"></script>
   <script src="Mesh.js" type="text/javascript"></script>
+  <script src="Table.js" type="text/javascript"></script>
 </head>
 <body onload = "ready()">
   <canvas id="GLCanvas" width="700" height="700">
       Your Browser Doesn't Support HTML5's Canvas.
   </canvas>
   <div>
-    <label for "FOV-slider">FOV: (1-90)</label>
-    <input id = "FOV-slider" type = "range" min = "1" max = "90" step = "1" oninput = "onFOVChanged()" value = "45"/>
+    <label for "FOV-slider">FOV: (1-179)</label>
+    <input id = "FOV-slider" type = "range" min = "1" max = "180" step = "1" oninput = "onFOVChanged()" value = "45"/>
     <label for "FOV-slider">45</label>
     <br>
     <label for "near">Near:</label>

@@ -56,7 +56,44 @@ function Mesh(colour) {
   this.rotate = function(x, y, z){
     this.modelTransformMatrix = mat4Multiply(this.modelTransformMatrix, createRotateMatrix(x, y, z));
   };
+  //Adding radii actually important here
+  //height actually half height as in resulting height is 2x height specified (WHOOPS)
+  this.createTruncatedCone = function(height, topRadius, bottomRadius, divisions){
+    this.vertices = [];
+    this.faces = [];
+    var topCentre = [0.0, height, 0.0, 1.0];
+    var bottomCentre = [0.0, -height, 0.0, 1.0];
+    Array.prototype.push.apply(this.vertices, topCentre);
+    Array.prototype.push.apply(this.vertices, bottomCentre);
+    for(i = 0; i < divisions; i++){
+      var radians = i * 2 / divisions * Math.PI;
+      var newPoint = [topRadius * Math.cos(radians), height, topRadius * Math.sin(radians), 1.0];
+      Array.prototype.push.apply(this.vertices, newPoint);
+      newPoint = [bottomRadius * Math.cos(radians), -height, bottomRadius * Math.sin(radians), 1.0];
+      Array.prototype.push.apply(this.vertices, newPoint);
+      if(this.vertices.length > 16){
+        var topFace = [0, i * 2 + 2, i * 2];
+        var bottomFace = [1, i * 2 + 3, i * 2 + 1];
+        var firstWallTriangle = [i * 2, i * 2 + 2, i * 2 + 3];
+        var secondWallTriangle = [i * 2 + 3, i * 2 + 1, i * 2];
+        Array.prototype.push.apply(this.faces, topFace);
+        Array.prototype.push.apply(this.faces, bottomFace);
+        Array.prototype.push.apply(this.faces, firstWallTriangle);
+        Array.prototype.push.apply(this.faces, secondWallTriangle);
+      }
+    }
+    var lastTop = [0, 2, (divisions - 1) * 2 + 2];
+    var lastBottom = [1, 3, (divisions - 1)* 2 + 3];
+    var secondLastWallTriangle = [2, (divisions - 1) * 2 + 2, 3];
+    var lastWallTriangle = [3, (divisions - 1) * 2 + 3, (divisions - 1) * 2 + 2];
+    Array.prototype.push.apply(this.faces, lastTop);
+    Array.prototype.push.apply(this.faces, lastBottom);
+    Array.prototype.push.apply(this.faces, secondLastWallTriangle);
+    Array.prototype.push.apply(this.faces, lastWallTriangle);
+  };
+
   //adding radius and height not really necessary since I can just stretch, but good to have
+  //Use division = 4 for rectangular prisms
   this.createCylinder = function(height, radius, divisions){
     this.vertices = [];
     this.faces = [];
