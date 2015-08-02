@@ -61,15 +61,15 @@ function Mesh(colour) {
   this.createTruncatedCone = function(height, topRadius, bottomRadius, divisions){
     this.vertices = [];
     this.faces = [];
-    var topCentre = [0.0, height, 0.0, 1.0];
-    var bottomCentre = [0.0, -height, 0.0, 1.0];
+    var topCentre = [0.0, height / 2, 0.0, 1.0];
+    var bottomCentre = [0.0, -height / 2, 0.0, 1.0];
     Array.prototype.push.apply(this.vertices, topCentre);
     Array.prototype.push.apply(this.vertices, bottomCentre);
     for(i = 0; i < divisions; i++){
       var radians = i * 2 / divisions * Math.PI;
-      var newPoint = [topRadius * Math.cos(radians), height, topRadius * Math.sin(radians), 1.0];
+      var newPoint = [topRadius * Math.cos(radians), height / 2, topRadius * Math.sin(radians), 1.0];
       Array.prototype.push.apply(this.vertices, newPoint);
-      newPoint = [bottomRadius * Math.cos(radians), -height, bottomRadius * Math.sin(radians), 1.0];
+      newPoint = [bottomRadius * Math.cos(radians), -height / 2, bottomRadius * Math.sin(radians), 1.0];
       Array.prototype.push.apply(this.vertices, newPoint);
       if(this.vertices.length > 16){
         var topFace = [0, i * 2 + 2, i * 2];
@@ -97,15 +97,15 @@ function Mesh(colour) {
   this.createCylinder = function(height, radius, divisions){
     this.vertices = [];
     this.faces = [];
-    var topCentre = [0.0, height, 0.0, 1.0];
-    var bottomCentre = [0.0, -height, 0.0, 1.0];
+    var topCentre = [0.0, height / 2, 0.0, 1.0];
+    var bottomCentre = [0.0, -height / 2, 0.0, 1.0];
     Array.prototype.push.apply(this.vertices, topCentre);
     Array.prototype.push.apply(this.vertices, bottomCentre);
     for(i = 0; i < divisions; i++){
       var radians = i * 2 / divisions * Math.PI;
-      var newPoint = [radius * Math.cos(radians), height, radius * Math.sin(radians), 1.0];
+      var newPoint = [radius * Math.cos(radians), height / 2, radius * Math.sin(radians), 1.0];
       Array.prototype.push.apply(this.vertices, newPoint);
-      newPoint = [radius * Math.cos(radians), -height, radius * Math.sin(radians), 1.0];
+      newPoint = [radius * Math.cos(radians), -height / 2, radius * Math.sin(radians), 1.0];
       Array.prototype.push.apply(this.vertices, newPoint);
       if(this.vertices.length > 16){
         var topFace = [0, i * 2 + 2, i * 2];

@@ -9,27 +9,27 @@ function Table(width, height, depth, boardToLegRatio, legToCentreRatio, legRadiu
   var tableTopHeight = height * boardToLegRatio;
   this.tableTop = new Mesh(colour);
   //actually a rectangle, basically a cylinder with only 4 sides
-  this.tableTop.createCylinder(tableTopHeight / 2, width * Math.sqrt(2) / 2, 4);
+  this.tableTop.createCylinder(tableTopHeight, width * Math.sqrt(2) / 2, 4);
   this.tableTop.scale(1, 1, 1 / widthDepthRatio);
-  this.tableTop.translate(0, (height - tableTopHeight) / 2, 0);
+  this.tableTop.translate(0, (height - tableTopHeight)/2, 0);
   this.tableTop.rotate(0, 45, 0);
 
   var legHeight = height - tableTopHeight;
   this.leg1 = new Mesh(colour);
-  this.leg1.createCylinder(legHeight / 2, legRadius, 100);
-  this.leg1.translate(width * legToCentreRatio / 2, -(tableTopHeight/2), depth * legToCentreRatio / 2);
+  this.leg1.createCylinder(legHeight, legRadius, 100);
+  this.leg1.translate(width * legToCentreRatio / 2, -tableTopHeight / 2, depth * legToCentreRatio / 2);
 
   this.leg2 = new Mesh(colour);
-  this.leg2.createCylinder(legHeight / 2, legRadius, 100);
-  this.leg2.translate(- (width * legToCentreRatio / 2), -(tableTopHeight/2), - (depth * legToCentreRatio / 2));
+  this.leg2.createCylinder(legHeight, legRadius, 100);
+  this.leg2.translate(- (width * legToCentreRatio / 2), -tableTopHeight / 2, - (depth * legToCentreRatio / 2));
 
   this.leg3 = new Mesh(colour);
-  this.leg3.createCylinder(legHeight / 2, legRadius, 100);
-  this.leg3.translate(- (width * legToCentreRatio / 2), -(tableTopHeight/2), depth * legToCentreRatio / 2);
+  this.leg3.createCylinder(legHeight, legRadius, 100);
+  this.leg3.translate(- (width * legToCentreRatio / 2), -tableTopHeight / 2, depth * legToCentreRatio / 2);
 
   this.leg4 = new Mesh(colour);
-  this.leg4.createCylinder(legHeight / 2, legRadius, 100);
-  this.leg4.translate(width * legToCentreRatio / 2, -(tableTopHeight/2), - (depth * legToCentreRatio / 2));
+  this.leg4.createCylinder(legHeight, legRadius, 100);
+  this.leg4.translate(width * legToCentreRatio / 2, -tableTopHeight / 2, - (depth * legToCentreRatio / 2));
 
   this.draw = function(WebGL){
     this.tableTop.draw(WebGL);
