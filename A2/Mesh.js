@@ -57,16 +57,15 @@ function Mesh(colour) {
     this.modelTransformMatrix = mat4Multiply(this.modelTransformMatrix, createRotateMatrix(x, y, z));
   };
   //Adding radii actually important here
-  //height actually half height as in resulting height is 2x height specified (WHOOPS)
-  this.createTruncatedCone = function(height, topRadius, bottomRadius, divisions){
+  this.createTruncatedPyramid = function(height, topRadius, bottomRadius, sides){
     this.vertices = [];
     this.faces = [];
     var topCentre = [0.0, height / 2, 0.0, 1.0];
     var bottomCentre = [0.0, -height / 2, 0.0, 1.0];
     Array.prototype.push.apply(this.vertices, topCentre);
     Array.prototype.push.apply(this.vertices, bottomCentre);
-    for(i = 0; i < divisions; i++){
-      var radians = i * 2 / divisions * Math.PI;
+    for(i = 0; i < sides; i++){
+      var radians = i * 2 / sides * Math.PI;
       var newPoint = [topRadius * Math.cos(radians), height / 2, topRadius * Math.sin(radians), 1.0];
       Array.prototype.push.apply(this.vertices, newPoint);
       newPoint = [bottomRadius * Math.cos(radians), -height / 2, bottomRadius * Math.sin(radians), 1.0];
@@ -82,10 +81,10 @@ function Mesh(colour) {
         Array.prototype.push.apply(this.faces, secondWallTriangle);
       }
     }
-    var lastTop = [0, 2, (divisions - 1) * 2 + 2];
-    var lastBottom = [1, 3, (divisions - 1)* 2 + 3];
-    var secondLastWallTriangle = [2, (divisions - 1) * 2 + 2, 3];
-    var lastWallTriangle = [3, (divisions - 1) * 2 + 3, (divisions - 1) * 2 + 2];
+    var lastTop = [0, 2, (sides - 1) * 2 + 2];
+    var lastBottom = [1, 3, (sides - 1)* 2 + 3];
+    var secondLastWallTriangle = [2, (sides - 1) * 2 + 2, 3];
+    var lastWallTriangle = [3, (sides - 1) * 2 + 3, (sides - 1) * 2 + 2];
     Array.prototype.push.apply(this.faces, lastTop);
     Array.prototype.push.apply(this.faces, lastBottom);
     Array.prototype.push.apply(this.faces, secondLastWallTriangle);
@@ -94,15 +93,15 @@ function Mesh(colour) {
 
   //adding radius and height not really necessary since I can just stretch, but good to have
   //Use division = 4 for rectangular prisms
-  this.createCylinder = function(height, radius, divisions){
+  this.createPrism = function(height, radius, sides){
     this.vertices = [];
     this.faces = [];
     var topCentre = [0.0, height / 2, 0.0, 1.0];
     var bottomCentre = [0.0, -height / 2, 0.0, 1.0];
     Array.prototype.push.apply(this.vertices, topCentre);
     Array.prototype.push.apply(this.vertices, bottomCentre);
-    for(i = 0; i < divisions; i++){
-      var radians = i * 2 / divisions * Math.PI;
+    for(i = 0; i < sides; i++){
+      var radians = i * 2 / sides * Math.PI;
       var newPoint = [radius * Math.cos(radians), height / 2, radius * Math.sin(radians), 1.0];
       Array.prototype.push.apply(this.vertices, newPoint);
       newPoint = [radius * Math.cos(radians), -height / 2, radius * Math.sin(radians), 1.0];
@@ -118,10 +117,10 @@ function Mesh(colour) {
         Array.prototype.push.apply(this.faces, secondWallTriangle);
       }
     }
-    var lastTop = [0, 2, (divisions - 1) * 2 + 2];
-    var lastBottom = [1, 3, (divisions - 1)* 2 + 3];
-    var secondLastWallTriangle = [2, (divisions - 1) * 2 + 2, 3];
-    var lastWallTriangle = [3, (divisions - 1) * 2 + 3, (divisions - 1) * 2 + 2];
+    var lastTop = [0, 2, (sides - 1) * 2 + 2];
+    var lastBottom = [1, 3, (sides - 1)* 2 + 3];
+    var secondLastWallTriangle = [2, (sides - 1) * 2 + 2, 3];
+    var lastWallTriangle = [3, (sides - 1) * 2 + 3, (sides - 1) * 2 + 2];
     Array.prototype.push.apply(this.faces, lastTop);
     Array.prototype.push.apply(this.faces, lastBottom);
     Array.prototype.push.apply(this.faces, secondLastWallTriangle);

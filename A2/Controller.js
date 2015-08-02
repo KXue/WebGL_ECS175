@@ -127,8 +127,8 @@ var table;
 function ready(){
   cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
   cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
-  cylinder.createTruncatedCone(1.0, 0.5, 1.0, 300);
-  cylinder2.createTruncatedCone(1.0, -1.0, 1.0, 300);
+  cylinder.createTruncatedPyramid(1.0, 0.5, 1.0, 300);
+  cylinder2.createTruncatedPyramid(1.0, -1.0, 1.0, 300);
   cylinder.translate(-2, 0, -6);
   cylinder2.translate(2, 0, -6);
   table = new Table(2.0, 1.0, 2.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
