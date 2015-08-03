@@ -124,6 +124,7 @@ var cylinder2;
 var canvasWidth;
 var canvasHeight;
 var table;
+var lamp;
 function ready(){
   cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
   cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
@@ -132,7 +133,10 @@ function ready(){
   cylinder.translate(-2, 0, -6);
   cylinder2.translate(2, 0, -6);
   table = new Table(2.0, 1.0, 2.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
+  lamp = new Lamp(1.0, 0.5, 0.2, 0.5, 0.1,
+    0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 3, 10, 4);
   table.translate(0, 0, -6);
+  lamp.translate(0.5, (lamp.height / 2) + 0.5, -6.5);
   var canvas = document.getElementById("GLCanvas");
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
@@ -155,6 +159,7 @@ function update(){
   table.draw(GL);
   cylinder.draw(GL);
   cylinder2.draw(GL);
+  lamp.draw(GL);
 }
 
 var map = []; // Or you could call it "key"
