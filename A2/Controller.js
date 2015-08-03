@@ -130,15 +130,21 @@ var canvasHeight;
 var table;
 var lamp;
 var booksWithBookEnds;
+var pencil;
 function ready(){
   table = new Table(4.0, 1.0, 4.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
   lamp = new Lamp(1.0, 0.5, 0.2, 0.5, 0.1,
-    0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 5, 10, 4);
-  booksWithBookEnds = new BooksWithBookEnds([[0, 0.5, 0.5, 1], [0.3, 0.4, 0.5, 1], [0.5, 0.4, 0.3, 1]], [[0.9, 0.9, 0.7, 1], [0.7, 0.7, 0.3, 1], [0.4, 0.4, 0.3, 1]],
-    [0.3, 0.3, 0.3, 1.0], [0.7, 0.6, 0.9], [0.8, 1.0, 0.7], [0.4, 0.3, 0.2], [0.03, 0.05, 0.02], [0.02, 0.03, 0.04], 0.5, 0.7, 0.3, 0.03);
+    0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 100, 100, 4);
+  booksWithBookEnds = new BooksWithBookEnds([[0, 0.5, 0.5, 1], [0.3, 0.4, 0.5, 1], [0.5, 0.4, 0.3, 1], [0.6, 0.2, 0.6, 1]],
+    [[0.9, 0.9, 0.7, 1], [0.7, 0.7, 0.3, 1], [0.6, 0.6, 0.5, 1], [0.8, 0.7, 0.6, 1]], [0.3, 0.3, 0.3, 1.0], [0.7, 0.6, 0.9, 0.5],
+     [0.8, 1.0, 0.7, 1.0], [0.4, 0.3, 0.2, 0.5], [0.03, 0.05, 0.02, 0.04], [0.02, 0.03, 0.04, 0.05], 0.5, 0.7, 0.3, 0.03);
+  pencil = new Pencil(1.5, 0.05, 0.2, 0.3, 0.2, 0.3, 0.06, 0.055,
+    [220 / 255, 140 / 255, 36 / 255, 1], [242 / 255, 211 / 255, 166 / 255, 1],
+    [92 / 255, 98 / 255, 116 / 255, 1], [192 / 255, 192 / 255, 192 / 255, 1], [244 / 255, 155 / 255, 149 / 255, 1]);
   table.translate(0, 0, -6);
   lamp.translate(1.0, (lamp.height / 2) + 0.5, -7);
-  booksWithBookEnds.translate(-1, booksWithBookEnds.bottom + 0.5, -7);
+  booksWithBookEnds.translate(-0.7, booksWithBookEnds.bottom + 0.5, -7);
+  pencil.translate(0, 0.56, -6);
   var canvas = document.getElementById("GLCanvas");
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
@@ -161,6 +167,7 @@ function update(){
   table.draw(GL);
   booksWithBookEnds.draw(GL);
   lamp.draw(GL);
+  pencil.draw(GL);
 }
 
 var map = []; // Or you could call it "key"
