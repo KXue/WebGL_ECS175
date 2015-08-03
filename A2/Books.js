@@ -1,6 +1,43 @@
-function BooksWithBookends(booksColour, bookEndColour, booksWidth, booksPaperColour, booksHeight, booksThickness,
-  booksCoverThickness, booksCoverProtrusion){
+function BooksWithBookEnds(booksColour, booksPaperColour, bookEndColour, booksWidth, booksHeight, booksThickness,
+  booksCoverThickness, booksCoverProtrusion, bookEndWidth, bookEndHeight, bookEndDepth, bookEndThickness){
+  this.books = [];
+  this.leftBookEnd = new BookEnd(bookEndColour, bookEndWidth, bookEndHeight, bookEndDepth, bookEndThickness);
+  this.rightBookEnd = new BookEnd(bookEndColour, bookEndWidth, bookEndHeight, bookEndDepth, bookEndThickness);
+  var book;
+  this.bottom = bookEndHeight / 2;
+  this.maxWidth = 0;
+  for(l = 0; l < booksWidth.length; l++){
+    book = new Book(booksColour[l], booksPaperColour[l], booksWidth[l], booksHeight[l],
+      booksThickness[l], booksCoverThickness[l], booksCoverProtrusion[l]);
+    book.translate(0, booksHeight[l] / 2 + booksCoverProtrusion[l] - this.bottom, 0);
+    this.maxWidth += booksThickness[l] + 2 * booksCoverThickness[l];
+    this.books.push(book);
+  }
+  this.leftBookEnd.translate(- (this.maxWidth + bookEndDepth) / 2, 0, 0);
+  this.rightBookEnd.rotate(0, 180, 0);
+  this.rightBookEnd.translate((this.maxWidth + bookEndDepth) / 2, 0, 0);
+  console.log(this.maxWidth);
+  var shifted = 0;
+  for(l = 0; l < this.books.length; l++){
+    this.books[l].translate(- (this.maxWidth - (booksThickness[l] + 2 * booksCoverThickness[l])) / 2 + shifted, 0, 0);
+    shifted += booksThickness[l] + 2 * booksCoverThickness[l];
+  }
 
+  this.translate = function(x, y, z){
+    this.leftBookEnd.translate(x, y, z);
+    this.rightBookEnd.translate(x, y, z);
+    for(l = 0; l < this.books.length; l++){
+      this.books[l].translate(x, y, z);
+    }
+  };
+
+  this.draw = function(WebGL){
+    this.leftBookEnd.draw(WebGL);
+    this.rightBookEnd.draw(WebGL);
+    for(l = 0; l < this.books.length; l++){
+      this.books[l].draw(WebGL);
+    }
+  };
 }
 function Book(bookColour, bookPaperColour, width, height, thickness, bookCoverThickness, bookCoverProtrusion){
   this.paper = new Mesh(bookPaperColour);
@@ -19,21 +56,21 @@ function Book(bookColour, bookPaperColour, width, height, thickness, bookCoverTh
 
   this.spine.createPrism(bookCoverThickness, heightToRadius, 4);
   this.spine.rotate(90, 45, 0);
-  this.spine.scale(1 / heightToThicknessRatio, 1 + (bookCoverProtrusion / heightToRadius), 1);
+  this.spine.scale(1 / heightToThicknessRatio, 1 + (2 * bookCoverProtrusion / height), 1);
   this.spine.translate(0, 0, (width + bookCoverThickness) / 2);
 
-  this.frontCover.createPrism(bookCoverThickness, (heightToRadius + bookCoverProtrusion), 4);
+  this.frontCover.createPrism(bookCoverThickness, heightToRadius, 4);
   // really need to improve rotate code
   this.frontCover.rotate(0, 45, 0);
   this.frontCover.rotate(0, 0, 90);
-  this.frontCover.scale(1, 1, 1 / heightToWidthRatio);
-  this.frontCover.translate((thickness + bookCoverThickness) / 2 , 0, -bookCoverProtrusion / (2 * heightToWidthRatio));
+  this.frontCover.scale(1, 1 + 2 * bookCoverProtrusion / height , 1 / heightToWidthRatio * (1 + (2 * bookCoverProtrusion + bookCoverThickness) / width));
+  this.frontCover.translate((thickness + bookCoverThickness) / 2 , 0, - bookCoverProtrusion + 0.5 * bookCoverThickness);
 
-  this.backCover.createPrism(bookCoverThickness, (heightToRadius + bookCoverProtrusion), 4);
+  this.backCover.createPrism(bookCoverThickness, heightToRadius, 4);
   this.backCover.rotate(0, 45, 0);
   this.backCover.rotate(0, 0, 90);
-  this.backCover.scale(1, 1, 1 / heightToWidthRatio);
-  this.backCover.translate(- (thickness + bookCoverThickness) / 2 , 0, -bookCoverProtrusion / (2 * heightToWidthRatio));
+  this.backCover.scale(1, 1 + 2 * bookCoverProtrusion / height , 1 / heightToWidthRatio * (1 + (2 * bookCoverProtrusion + bookCoverThickness) / width));
+  this.backCover.translate(- (thickness + bookCoverThickness) / 2 , 0, - bookCoverProtrusion + 0.5 * bookCoverThickness);
 
   this.draw = function(WebGL){
     this.paper.draw(WebGL);

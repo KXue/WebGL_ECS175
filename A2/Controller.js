@@ -125,34 +125,20 @@ function createTransformMatrix(transformStack){
   }
 }
 
-var cylinder;
-var cylinder2;
 var canvasWidth;
 var canvasHeight;
 var table;
 var lamp;
-var book;
-var bookEnd;
-var bookEnd2;
+var booksWithBookEnds;
 function ready(){
-  cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
-  cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
-  cylinder.createTruncatedPyramid(1.0, 0.5, 1.0, 300);
-  cylinder2.createTruncatedPyramid(1.0, -1.0, 1.0, 300);
-  cylinder.translate(-2, 0, -6);
-  cylinder2.translate(2, 0, -6);
-  table = new Table(2.0, 1.0, 2.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
+  table = new Table(4.0, 1.0, 4.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
   lamp = new Lamp(1.0, 0.5, 0.2, 0.5, 0.1,
     0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 5, 10, 4);
-  book = new Book([0, 0.5, 0.5, 1], [0.9, 0.9, 0.7, 1], 0.7, 1.0, 0.4, 0.01, 0.05);
-  bookEnd = new BookEnd([0.3, 0.3, 0.3, 1.0], 0.7, 1.0, 0.3, 0.02);
-  bookEnd2 = new BookEnd([0.3, 0.3, 0.3, 1.0], 0.7, 1.0, 0.3, 0.02);
+  booksWithBookEnds = new BooksWithBookEnds([[0, 0.5, 0.5, 1], [0.3, 0.4, 0.5, 1], [0.5, 0.4, 0.3, 1]], [[0.9, 0.9, 0.7, 1], [0.7, 0.7, 0.3, 1], [0.4, 0.4, 0.3, 1]],
+    [0.3, 0.3, 0.3, 1.0], [0.7, 0.6, 0.9], [0.8, 1.0, 0.7], [0.4, 0.3, 0.2], [0.03, 0.05, 0.02], [0.02, 0.03, 0.04], 0.5, 0.7, 0.3, 0.03);
   table.translate(0, 0, -6);
-  lamp.translate(0.5, (lamp.height / 2) + 0.5, -6.5);
-  book.translate(0, 0, -6);
-  bookEnd.translate(-0.4, 0, -6);
-  bookEnd2.rotate(0, 180, 0);
-  bookEnd2.translate(0.4, 0, -6);
+  lamp.translate(1.0, (lamp.height / 2) + 0.5, -7);
+  booksWithBookEnds.translate(-1, booksWithBookEnds.bottom + 0.5, -7);
   var canvas = document.getElementById("GLCanvas");
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
@@ -172,12 +158,8 @@ function update(){
   GL.GL.clear(16384 | 256);
   GL.updatePosition();
   GL.moveDirection[2] = 0;
-  //table.draw(GL);
-  //book.draw(GL);
-  bookEnd.draw(GL);
-  bookEnd2.draw(GL);
-  cylinder.draw(GL);
-  cylinder2.draw(GL);
+  table.draw(GL);
+  booksWithBookEnds.draw(GL);
   lamp.draw(GL);
 }
 
