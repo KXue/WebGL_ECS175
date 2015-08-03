@@ -18,12 +18,18 @@ function mat4Multiply(firstMatrix, secondMatrix){
   }
   return resultMatrix;
 }
-function vec4Mat4Multiply(vector, matrix){
-  newVector = [0, 0, 0, 0];
-  for(i = 0; i < 4; i++){
-    for(j = 0; j < 4; j++){
-      newVector[i] += vector[i] * matrix[i * 4 + j];
-    }
+function normalize(vector){
+  var length = 0;
+  for(i = 0; i < vector.length; i++){
+    length += vector[i] * vector[i];
+  }
+  length = Math.sqrt(length);
+  if(length === 0){
+    return vector;
+  }
+  var newVector = [];
+  for(i = 0; i < vector.length; i++){
+    newVector[i] = vector[i] / length;
   }
   return newVector;
 }
@@ -126,6 +132,8 @@ var canvasHeight;
 var table;
 var lamp;
 var book;
+var bookEnd;
+var bookEnd2;
 function ready(){
   cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
   cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
@@ -137,9 +145,14 @@ function ready(){
   lamp = new Lamp(1.0, 0.5, 0.2, 0.5, 0.1,
     0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 5, 10, 4);
   book = new Book([0, 0.5, 0.5, 1], [0.9, 0.9, 0.7, 1], 0.7, 1.0, 0.4, 0.01, 0.05);
+  bookEnd = new BookEnd([0.3, 0.3, 0.3, 1.0], 0.7, 1.0, 0.3, 0.02);
+  bookEnd2 = new BookEnd([0.3, 0.3, 0.3, 1.0], 0.7, 1.0, 0.3, 0.02);
   table.translate(0, 0, -6);
   lamp.translate(0.5, (lamp.height / 2) + 0.5, -6.5);
   book.translate(0, 0, -6);
+  bookEnd.translate(-0.4, 0, -6);
+  bookEnd2.rotate(0, 180, 0);
+  bookEnd2.translate(0.4, 0, -6);
   var canvas = document.getElementById("GLCanvas");
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
@@ -160,7 +173,9 @@ function update(){
   GL.updatePosition();
   GL.moveDirection[2] = 0;
   //table.draw(GL);
-  book.draw(GL);
+  //book.draw(GL);
+  bookEnd.draw(GL);
+  bookEnd2.draw(GL);
   cylinder.draw(GL);
   cylinder2.draw(GL);
   lamp.draw(GL);

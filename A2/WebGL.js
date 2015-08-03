@@ -76,7 +76,8 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
   //4th number of directionVector = 0
   //directionVector is normalized
   this.directionalTranslate = function(magnitude, directionVector){
-    var rotatedUnitVector = vec4Mat4Multiply(directionVector, this.cameraTransformMatrix);
+    var rotatedUnitVector = directionVector;
+    rotatedUnitVector = normalize(rotatedUnitVector);
     for(i = 0; i < 4; i++){
       rotatedUnitVector[i] *= magnitude;
     }

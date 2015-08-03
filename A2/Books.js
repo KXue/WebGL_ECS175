@@ -49,6 +49,37 @@ function Book(bookColour, bookPaperColour, width, height, thickness, bookCoverTh
     this.backCover.translate(x, y, z);
   };
 }
-function BookEnd(bookEndColour, bookEndWidth, bookEndHeight, bookEndDepth, bookEndThickness){
+function BookEnd(colour, width, height, depth, thickness){
+  this.feet = new Mesh(colour);
+  this.stand = new Mesh(colour);
 
+  var widthToHeightRatio = width / height;
+  var widthToDepthRatio = width / depth;
+  var widthToRadius = width * Math.sqrt(2) / 2;
+
+  this.feet.createPrism(thickness, widthToRadius, 4);
+  this.stand.createPrism(thickness, widthToRadius, 4);
+
+  this.stand.rotate(0, 45, 0);
+  this.stand.rotate(0, 0, 90);
+  this.feet.rotate(0, 45, 0);
+
+  this.stand.scale(1, 1 / widthToHeightRatio, 1);
+  this.feet.scale(1 / widthToDepthRatio * (1 - thickness / depth), 1, 1);
+
+  this.stand.translate((depth - thickness) / 2, 0, 0);
+  this.feet.translate(- thickness / 2, - (height - thickness) / 2, 0);
+
+  this.translate = function(x, y, z){
+    this.stand.translate(x, y, z);
+    this.feet.translate(x, y, z);
+  };
+  this.draw = function(WebGL){
+    this.stand.draw(WebGL);
+    this.feet.draw(WebGL);
+  };
+  this.rotate = function(x, y, z){
+    this.stand.rotate(x, y, z);
+    this.feet.rotate(x, y, z);
+  };
 }
