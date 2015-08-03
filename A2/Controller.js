@@ -125,6 +125,7 @@ var canvasWidth;
 var canvasHeight;
 var table;
 var lamp;
+var book;
 function ready(){
   cylinder = new Mesh([0.0, 0.0, 1.0, 1.0]);
   cylinder2 = new Mesh([1.0, 0.0, 0.0, 1.0]);
@@ -134,9 +135,11 @@ function ready(){
   cylinder2.translate(2, 0, -6);
   table = new Table(2.0, 1.0, 2.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
   lamp = new Lamp(1.0, 0.5, 0.2, 0.5, 0.1,
-    0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 3, 10, 4);
+    0.3, 0.1, [0.2, 0.2, 0.2, 1.0], [0.5, 0.5, 0.5, 1.0], [0.9, 0.9, 0.9, 1.0], 5, 10, 4);
+  book = new Book([0, 0.5, 0.5, 1], [0.9, 0.9, 0.7, 1], 0.7, 1.0, 0.4, 0.01, 0.05);
   table.translate(0, 0, -6);
   lamp.translate(0.5, (lamp.height / 2) + 0.5, -6.5);
+  book.translate(0, 0, -6);
   var canvas = document.getElementById("GLCanvas");
   canvasWidth = canvas.width;
   canvasHeight = canvas.height;
@@ -156,7 +159,8 @@ function update(){
   GL.GL.clear(16384 | 256);
   GL.updatePosition();
   GL.moveDirection[2] = 0;
-  table.draw(GL);
+  //table.draw(GL);
+  book.draw(GL);
   cylinder.draw(GL);
   cylinder2.draw(GL);
   lamp.draw(GL);

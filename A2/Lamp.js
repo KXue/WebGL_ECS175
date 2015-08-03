@@ -12,7 +12,7 @@ function Lamp(height, shadeToLampHeight, shadeTopRadius, shadeBottomRadius, base
 
   this.shade.createTruncatedPyramid(shadeHeight, shadeTopRadius, shadeBottomRadius, shadeSides);
   this.neck.createPrism(neckHeight, neckRadius, neckSides);
-  this.base.createPrism(baseHeight, baseRadius, neckSides);
+  this.base.createPrism(baseHeight, baseRadius, baseSides);
 
   console.log(height);
   console.log(baseHeight);
