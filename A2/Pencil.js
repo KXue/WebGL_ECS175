@@ -14,11 +14,11 @@ function Pencil(length, radius, tipToLengthRatio, leadToTipRatio, backToLengthRa
   this.back = new Mesh(backColour);
   this.eraser = new Mesh(eraserColour);
 
-  this.pencil.createPrism(pencilLength, radius, 100);
-  this.tip.createTruncatedPyramid(tipLength - leadLength, radius * leadToTipRatio, radius, 100);
-  this.lead.createTruncatedPyramid(leadLength, 0, radius * leadToTipRatio, 100);
-  this.back.createPrism(backLength - eraserLength, backRadius, 100);
-  this.eraser.createPrism(eraserLength, eraserRadius, 100);
+  this.pencil.createPrism(pencilLength, radius, 16);
+  this.tip.createTruncatedPyramid(tipLength - leadLength, radius * leadToTipRatio, radius, 16);
+  this.lead.createTruncatedPyramid(leadLength, 0, radius * leadToTipRatio, 16);
+  this.back.createPrism(backLength - eraserLength, backRadius, 16);
+  this.eraser.createPrism(eraserLength, eraserRadius, 16);
 
   this.pencil.rotate(0, 0, 90);
   this.tip.rotate(0, 0, 90);

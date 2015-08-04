@@ -15,21 +15,21 @@ function Table(width, height, depth, boardToLegRatio, legToCentreRatio, legRadiu
   this.tableTop.rotate(0, 45, 0);
 
   var legHeight = height - tableTopHeight;
-  
+
   this.leg1 = new Mesh(colour);
-  this.leg1.createPrism(legHeight, legRadius, 100);
+  this.leg1.createPrism(legHeight, legRadius, 16);
   this.leg1.translate(width * legToCentreRatio / 2, -tableTopHeight / 2, depth * legToCentreRatio / 2);
 
   this.leg2 = new Mesh(colour);
-  this.leg2.createPrism(legHeight, legRadius, 100);
+  this.leg2.createPrism(legHeight, legRadius, 16);
   this.leg2.translate(- (width * legToCentreRatio / 2), -tableTopHeight / 2, - (depth * legToCentreRatio / 2));
 
   this.leg3 = new Mesh(colour);
-  this.leg3.createPrism(legHeight, legRadius, 100);
+  this.leg3.createPrism(legHeight, legRadius, 16);
   this.leg3.translate(- (width * legToCentreRatio / 2), -tableTopHeight / 2, depth * legToCentreRatio / 2);
 
   this.leg4 = new Mesh(colour);
-  this.leg4.createPrism(legHeight, legRadius, 100);
+  this.leg4.createPrism(legHeight, legRadius, 16);
   this.leg4.translate(width * legToCentreRatio / 2, -tableTopHeight / 2, - (depth * legToCentreRatio / 2));
 
   this.draw = function(WebGL){

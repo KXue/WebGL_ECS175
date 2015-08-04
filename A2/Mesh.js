@@ -1,5 +1,4 @@
 function Mesh(colour) {
-  this.currentTransform = [];
   this.faces = [];
   this.vertices = [];
   this.colour = colour;
@@ -37,7 +36,7 @@ function Mesh(colour) {
 
     cMatrix = WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "cameraTransformMatrix");
     WebGL.GL.uniformMatrix4fv(cMatrix, false, new Float32Array(WebGL.cameraTransformMatrix));
-    //Draw The Lines
+    //Draw The triangles
     WebGL.GL.drawElements(WebGL.GL.TRIANGLES, this.faces.length, WebGL.GL.UNSIGNED_SHORT, 0);
   };
 
@@ -125,5 +124,21 @@ function Mesh(colour) {
     Array.prototype.push.apply(this.faces, lastBottom);
     Array.prototype.push.apply(this.faces, secondLastWallTriangle);
     Array.prototype.push.apply(this.faces, lastWallTriangle);
+  };
+  this.createRectangle = function(width, height){
+    this.vertices = [];
+    this.faces = [];
+
+    var topLeft = [-width / 2, 0, -height / 2, 1];
+    var topRight = [width / 2, 0, -height / 2, 1];
+    var bottomLeft = [-width / 2, 0, height / 2, 1];
+    var bottomRight = [width / 2, 0, height / 2, 1];
+
+    Array.prototype.push.apply(this.vertices, topLeft);
+    Array.prototype.push.apply(this.vertices, topRight);
+    Array.prototype.push.apply(this.vertices, bottomLeft);
+    Array.prototype.push.apply(this.vertices, bottomRight);
+
+    Array.prototype.push.apply(this.faces, [0, 1, 2, 1, 3, 2]);
   };
 }
