@@ -34,18 +34,28 @@
 
   <script id="VertexShader" type="x-shader/x-vertex">
     attribute highp vec4 vertexPosition;
+
     uniform highp mat4 modelMatrix;
     uniform highp mat4 projectionMatrix;
     uniform highp mat4 cameraTransformMatrix;
+//    uniform bool multiColoured;
+
+//    varying highp vec2 vTextureCoord;
 
     void main(void) {
 			gl_Position = projectionMatrix * cameraTransformMatrix * modelMatrix * vertexPosition;
+//      vTextureCoord = TextureCoord;
 		}
   </script>
   <script id="FragmentShader" type="x-shader/x-fragment">
     uniform highp vec4 color;
+//    uniform bool multiColoured;
+//    uniform sampler2D uSampler;
+
+//    varying highp vec2 vTextureCoord;
+
     void main(void) {
-			gl_FragColor = color;
+      gl_FragColor = color;
 		}
   </script>
 </body>

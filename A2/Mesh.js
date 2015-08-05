@@ -9,9 +9,7 @@ function Mesh(colour) {
   this.draw = function(WebGL){
     var VertexBuffer = WebGL.GL.createBuffer(),
     faceBuffer, //Create a New Buffer
-    pMatrix,
-    mMatrix,
-    cMatrix; //Uniform locations of transform and projection matrices
+    mMatrix;
 
     //Bind it as The Current Buffer
     WebGL.GL.bindBuffer(WebGL.GL.ARRAY_BUFFER, VertexBuffer);
@@ -28,14 +26,9 @@ function Mesh(colour) {
 
     WebGL.GL.uniform4fv(WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "color"), new Float32Array(this.colour));
 
-    pMatrix = WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "projectionMatrix");
-    WebGL.GL.uniformMatrix4fv(pMatrix, false, new Float32Array(WebGL.perspectiveMatrix));
-
     mMatrix = WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "modelMatrix");
     WebGL.GL.uniformMatrix4fv(mMatrix, false, new Float32Array(this.modelTransformMatrix));
 
-    cMatrix = WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "cameraTransformMatrix");
-    WebGL.GL.uniformMatrix4fv(cMatrix, false, new Float32Array(WebGL.cameraTransformMatrix));
     //Draw The triangles
     WebGL.GL.drawElements(WebGL.GL.TRIANGLES, this.faces.length, WebGL.GL.UNSIGNED_SHORT, 0);
   };

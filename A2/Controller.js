@@ -142,7 +142,7 @@ function ready(){
   pencil = new Pencil(1.5, 0.05, 0.2, 0.3, 0.2, 0.3, 0.06, 0.055,
     [220 / 255, 140 / 255, 36 / 255, 1], [242 / 255, 211 / 255, 166 / 255, 1],
     [92 / 255, 98 / 255, 116 / 255, 1], [192 / 255, 192 / 255, 192 / 255, 1], [244 / 255, 155 / 255, 149 / 255, 1]);
-  paper = new Paper(0.85, 1.1, 10, 0.01, 0.2, [0.9, 0.9, 0.7, 1], [92 / 255, 98 / 255, 116 / 255, 1]);
+  paper = new Paper(0.85, 1.1, 10, 0.01, 0.3, [0.9, 0.9, 0.7, 1], [92 / 255, 98 / 255, 116 / 255, 1]);
   paper.translate(0, 0.5001, -5);
   table.translate(0, 0, -6);
   lamp.translate(1.0, (lamp.height / 2) + 0.5, -7);
@@ -167,6 +167,13 @@ function update(){
   GL.GL.clear(16384 | 256);
   GL.updatePosition();
   GL.moveDirection[2] = 0;
+
+  var pMatrix = GL.GL.getUniformLocation(GL.ShaderProgram, "projectionMatrix");
+  GL.GL.uniformMatrix4fv(pMatrix, false, new Float32Array(GL.perspectiveMatrix));
+
+  var cMatrix = GL.GL.getUniformLocation(GL.ShaderProgram, "cameraTransformMatrix");
+  GL.GL.uniformMatrix4fv(cMatrix, false, new Float32Array(GL.cameraTransformMatrix));
+
   table.draw(GL);
   booksWithBookEnds.draw(GL);
   lamp.draw(GL);
