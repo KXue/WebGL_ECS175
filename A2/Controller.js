@@ -132,6 +132,8 @@ var lamp;
 var booksWithBookEnds;
 var pencil;
 var paper;
+var mesh;
+var disc;
 function ready(){
   table = new Table(4.0, 1.0, 4.0, 0.1, 0.5, 0.1, [0x67 / 255, 0x0A / 255, 0x0A / 255, 1.0]);
   lamp = new Lamp(1.0, 0.5, 0.2, 0.5, 0.1,
@@ -143,6 +145,13 @@ function ready(){
     [220 / 255, 140 / 255, 36 / 255, 1], [242 / 255, 211 / 255, 166 / 255, 1],
     [92 / 255, 98 / 255, 116 / 255, 1], [192 / 255, 192 / 255, 192 / 255, 1], [244 / 255, 155 / 255, 149 / 255, 1]);
   paper = new Paper(0.85, 1.1, 10, 0.01, 0.3, [0.9, 0.9, 0.7, 1], [92 / 255, 98 / 255, 116 / 255, 1]);
+  mesh = new Mesh([125 / 255, 132 / 255, 113 / 255, 1]);
+  disc = new Mesh([0, 168 / 255, 107 / 255, 1]);
+  createRectangularPrismWithCircularHole(mesh, 2, 0.5, 0.75, 32);
+  createDiscWithCircularHole(disc, 0.75, 0.5, 32);
+  console.log(disc);
+  mesh.translate(0, 0, -6);
+  disc.translate(0, 0.25, -6);
   paper.translate(0, 0.5001, -5);
   table.translate(0, 0, -6);
   lamp.translate(1.0, (lamp.height / 2) + 0.5, -7);
@@ -174,11 +183,13 @@ function update(){
   var cMatrix = GL.GL.getUniformLocation(GL.ShaderProgram, "cameraTransformMatrix");
   GL.GL.uniformMatrix4fv(cMatrix, false, new Float32Array(GL.cameraTransformMatrix));
 
-  table.draw(GL);
-  booksWithBookEnds.draw(GL);
-  lamp.draw(GL);
-  paper.draw(GL);
-  pencil.draw(GL);
+  mesh.draw(GL);
+  disc.draw(GL);
+  //table.draw(GL);
+  //booksWithBookEnds.draw(GL);
+  //lamp.draw(GL);
+  //paper.draw(GL);
+  //pencil.draw(GL);
 }
 
 var map = []; // Or you could call it "key"

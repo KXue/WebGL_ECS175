@@ -16,7 +16,6 @@ function BooksWithBookEnds(booksColour, booksPaperColour, bookEndColour, booksWi
   this.leftBookEnd.translate(- (this.maxWidth + bookEndDepth) / 2, 0, 0);
   this.rightBookEnd.rotate(0, 180, 0);
   this.rightBookEnd.translate((this.maxWidth + bookEndDepth) / 2, 0, 0);
-  console.log(this.maxWidth);
   var shifted = 0;
   for(l = 0; l < this.books.length; l++){
     this.books[l].translate(- (this.maxWidth - (booksThickness[l] + 2 * booksCoverThickness[l])) / 2 + shifted, 0, 0);
