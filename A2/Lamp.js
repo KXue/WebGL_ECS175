@@ -14,23 +14,17 @@ function Lamp(height, shadeToLampHeight, shadeTopRadius, shadeBottomRadius, base
   this.neck.createPrism(neckHeight, neckRadius, neckSides);
   this.base.createPrism(baseHeight, baseRadius, baseSides);
 
-  console.log(height);
-  console.log(baseHeight);
-  console.log(neckHeight);
-  console.log(neckHeight);
   this.shade.translate(0, (height - shadeHeight) / 2, 0);
   this.neck.translate(0, ((height - neckHeight) / 2) - shadeHeight, 0);
   this.base.translate(0, ((height - baseHeight) / 2) - shadeHeight - neckHeight, 0);
 
+  this.finalMesh = combineMeshes(this.shade, this.neck);
+  this.finalMesh = combineMeshes(this.finalMesh, this.base);
 
   this.draw = function(WebGL){
-    this.shade.draw(WebGL);
-    this.neck.draw(WebGL);
-    this.base.draw(WebGL);
+    this.finalMesh.draw(WebGL);
   };
   this.translate = function(x, y, z){
-    this.shade.translate(x, y, z);
-    this.neck.translate(x, y, z);
-    this.base.translate(x, y, z);
+    this.finalMesh.translate(x, y, z);
   };
 }

@@ -32,20 +32,17 @@ function Table(width, height, depth, boardToLegRatio, legToCentreRatio, legRadiu
   this.leg4.createPrism(legHeight, legRadius, 16);
   this.leg4.translate(width * legToCentreRatio / 2, -tableTopHeight / 2, - (depth * legToCentreRatio / 2));
 
+  this.finalMesh = combineMeshes(this.tableTop, this.leg1);
+  this.finalMesh = combineMeshes(this.finalMesh, this.leg2);
+  this.finalMesh = combineMeshes(this.finalMesh, this.leg3);
+  this.finalMesh = combineMeshes(this.finalMesh, this.leg4);
+
   this.draw = function(WebGL){
-    this.tableTop.draw(WebGL);
-    this.leg1.draw(WebGL);
-    this.leg2.draw(WebGL);
-    this.leg3.draw(WebGL);
-    this.leg4.draw(WebGL);
+    this.finalMesh.draw(WebGL);
   };
 
   this.translate = function(x, y, z){
-    this.tableTop.translate(x, y, z);
-    this.leg1.translate(x, y, z);
-    this.leg2.translate(x, y, z);
-    this.leg3.translate(x, y, z);
-    this.leg4.translate(x, y, z);
+    this.finalMesh.translate(x, y, z);
   };
 
 }

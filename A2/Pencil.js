@@ -31,19 +31,16 @@ function Pencil(length, radius, tipToLengthRatio, leadToTipRatio, backToLengthRa
   this.back.translate((pencilLength + backLength - eraserLength) / 2, 0, 0);
   this.eraser.translate((pencilLength + eraserLength) / 2 + backLength - eraserLength, 0, 0);
 
+  this.finalMesh = combineMeshes(this.tip, this.lead);
+  this.finalMesh = combineMeshes(this.finalMesh, this.pencil);
+  this.finalMesh = combineMeshes(this.finalMesh, this.back);
+  this.finalMesh = combineMeshes(this.finalMesh, this.eraser);
+
   this.translate = function(x, y, z){
-    this.pencil.translate(x, y, z);
-    this.tip.translate(x, y, z);
-    this.lead.translate(x, y, z);
-    this.back.translate(x, y, z);
-    this.eraser.translate(x, y, z);
+    this.finalMesh.translate(x, y, z);
   };
 
   this.draw = function(WebGL){
-    this.pencil.draw(WebGL);
-    this.tip.draw(WebGL);
-    this.lead.draw(WebGL);
-    this.back.draw(WebGL);
-    this.eraser.draw(WebGL);
+    this.finalMesh.draw(WebGL);
   };
 }

@@ -152,3 +152,47 @@ function Mesh(colour) {
     Array.prototype.push.apply(this.faces, [0, 1, 2, 1, 3, 2]);
   };
 }
+function combineMeshes(firstMesh, secondMesh){
+  var finalMesh = new Mesh([0, 0, 0, 0]);
+  applyTransforms(firstMesh);
+  applyTransforms(secondMesh);
+
+  Array.prototype.push.apply(finalMesh.vertices, firstMesh.vertices);
+  Array.prototype.push.apply(finalMesh.colourVertices, firstMesh.colourVertices);
+  Array.prototype.push.apply(finalMesh.faces, firstMesh.faces);
+
+  Array.prototype.push.apply(finalMesh.vertices, secondMesh.vertices);
+  Array.prototype.push.apply(finalMesh.colourVertices, secondMesh.colourVertices);
+
+  firstMeshVertexCount = firstMesh.vertices.length/3;
+
+  for(i = 0; i < secondMesh.faces.length; i++){
+    finalMesh.faces.push(secondMesh.faces[i] + firstMeshVertexCount);
+  }
+  return finalMesh;
+}
+function applyTransforms(mesh){
+  var matrix = mesh.modelTransformMatrix;
+  var vertices = mesh.vertices;
+  var vertex;
+  for(i = 0; i < vertices.length; i += 3){
+    vertex = vertices.slice(i, i+3);
+    vertex = transform(vertex, matrix);
+    mesh.vertices[i] = vertex[0];
+    mesh.vertices[i + 1] = vertex[1];
+    mesh.vertices[i + 2] = vertex[2];
+  }
+  mesh.modelTransformMatrix = identityMatrix;
+}
+function transform(vector, matrix){
+  var resultVector = [0, 0, 0, 0];
+  if(vector.length == 3){
+    vector.push(1.0);
+  }
+  for(j = 0; j < 4; j++){
+    for(k = 0; k < 4; k++){
+      resultVector[j] += vector[k] * matrix[4 * k + j];
+    }
+  }
+  return resultVector;
+}

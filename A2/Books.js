@@ -21,21 +21,24 @@ function BooksWithBookEnds(booksColour, booksPaperColour, bookEndColour, booksWi
     this.books[l].translate(- (this.maxWidth - (booksThickness[l] + 2 * booksCoverThickness[l])) / 2 + shifted, 0, 0);
     shifted += booksThickness[l] + 2 * booksCoverThickness[l];
   }
+  console.log(this.leftBookEnd);
+  console.log(this.rightBookEnd);
+  this.finalMesh = combineMeshes(this.leftBookEnd.feet, this.leftBookEnd.stand);
+  this.finalMesh = combineMeshes(this.finalMesh, this.rightBookEnd.feet);
+  this.finalMesh = combineMeshes(this.finalMesh, this.rightBookEnd.stand);
+  for(l = 0; l < this.books.length; l++){
+    this.finalMesh = combineMeshes(this.finalMesh, this.books[l].paper);
+    this.finalMesh = combineMeshes(this.finalMesh, this.books[l].spine);
+    this.finalMesh = combineMeshes(this.finalMesh, this.books[l].backCover);
+    this.finalMesh = combineMeshes(this.finalMesh, this.books[l].frontCover);
+  }
 
   this.translate = function(x, y, z){
-    this.leftBookEnd.translate(x, y, z);
-    this.rightBookEnd.translate(x, y, z);
-    for(l = 0; l < this.books.length; l++){
-      this.books[l].translate(x, y, z);
-    }
+    this.finalMesh.translate(x, y, z);
   };
 
   this.draw = function(WebGL){
-    this.leftBookEnd.draw(WebGL);
-    this.rightBookEnd.draw(WebGL);
-    for(l = 0; l < this.books.length; l++){
-      this.books[l].draw(WebGL);
-    }
+    this.finalMesh.draw(WebGL);
   };
 }
 function Book(bookColour, bookPaperColour, width, height, thickness, bookCoverThickness, bookCoverProtrusion){
