@@ -14,8 +14,8 @@ function createRectangularPrismWithCircularHole(mesh, sideLength, height, radius
 
   for(i = 0; i < divisions; i++){
     var radians = i * 2 / divisions * Math.PI;
-    insidePoint = [holeRadius * Math.cos(radians), 0, holeRadius * Math.sin(radians), 1.0];
-
+    var insidePoint = [radius * Math.cos(radians), height / 2, radius * Math.sin(radians), 1.0];
+    if(radians)
   }
 
   mesh.vertices = vertices;

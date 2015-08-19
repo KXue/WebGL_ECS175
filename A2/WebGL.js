@@ -43,8 +43,10 @@ function WebGL(canvasID, fragmentShaderID, vertexShaderID){
 			this.GL.useProgram(this.ShaderProgram);
 
 			//Link Vertex Position Attribute from Shader
-			this.VertexPosition = this.GL.getAttribLocation(this.ShaderProgram, "vertexPosition");
-			this.GL.enableVertexAttribArray(this.VertexPosition);
+      this.vertexPosition = this.GL.getAttribLocation(this.ShaderProgram, "vertexPosition");
+      this.vertexColour = this.GL.getAttribLocation(this.ShaderProgram, "vertexColour");
+      this.GL.enableVertexAttribArray(this.vertexPosition);
+      this.GL.enableVertexAttribArray(this.vertexColour);
     }
   }
 

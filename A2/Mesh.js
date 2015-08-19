@@ -1,30 +1,35 @@
 function Mesh(colour) {
   this.faces = [];
   this.vertices = [];
+  this.colourVertices = [];
   this.colour = colour;
   this.modelTransformMatrix = identityMatrix;
   //transformations stored in the modelTransformMatrix. Any new transformations are matrix multiplied to modelTransformMatrix
   //modelTransformMatrix can be reset to identity matrix
 
   this.draw = function(WebGL){
-    var VertexBuffer = WebGL.GL.createBuffer(),
+    var vertexBuffer = WebGL.GL.createBuffer(),
     faceBuffer, //Create a New Buffer
+    vertexColourBuffer,
     mMatrix;
 
     //Bind it as The Current Buffer
-    WebGL.GL.bindBuffer(WebGL.GL.ARRAY_BUFFER, VertexBuffer);
+    WebGL.GL.bindBuffer(WebGL.GL.ARRAY_BUFFER, vertexBuffer);
 
     // Fill it With the Data
     WebGL.GL.bufferData(WebGL.GL.ARRAY_BUFFER, new Float32Array(this.vertices), WebGL.GL.STATIC_DRAW);
 
     //Connect Buffer To Shader's attribute
-    WebGL.GL.vertexAttribPointer(WebGL.VertexPosition, 4, WebGL.GL.FLOAT, false, 0, 0);
+    WebGL.GL.vertexAttribPointer(WebGL.vertexPosition, 3, WebGL.GL.FLOAT, false, 0, 0);
+
+    vertexColourBuffer = WebGL.GL.createBuffer();
+    WebGL.GL.bindBuffer(WebGL.GL.ARRAY_BUFFER, vertexColourBuffer);
+    WebGL.GL.bufferData(WebGL.GL.ARRAY_BUFFER, new Float32Array(this.colourVertices), WebGL.GL.STATIC_DRAW);
+    WebGL.GL.vertexAttribPointer(WebGL.vertexColour, 4, WebGL.GL.FLOAT, false, 0, 0);
 
     faceBuffer = WebGL.GL.createBuffer();
     WebGL.GL.bindBuffer(WebGL.GL.ELEMENT_ARRAY_BUFFER, faceBuffer);
     WebGL.GL.bufferData(WebGL.GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.faces), WebGL.GL.STATIC_DRAW);
-
-    WebGL.GL.uniform4fv(WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "color"), new Float32Array(this.colour));
 
     mMatrix = WebGL.GL.getUniformLocation(WebGL.ShaderProgram, "modelMatrix");
     WebGL.GL.uniformMatrix4fv(mMatrix, false, new Float32Array(this.modelTransformMatrix));
@@ -52,17 +57,21 @@ function Mesh(colour) {
   this.createTruncatedPyramid = function(height, topRadius, bottomRadius, sides){
     this.vertices = [];
     this.faces = [];
-    var topCentre = [0.0, height / 2, 0.0, 1.0];
-    var bottomCentre = [0.0, -height / 2, 0.0, 1.0];
+    var topCentre = [0.0, height / 2, 0.0];
+    var bottomCentre = [0.0, -height / 2, 0.0];
     Array.prototype.push.apply(this.vertices, topCentre);
     Array.prototype.push.apply(this.vertices, bottomCentre);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
     for(i = 0; i < sides; i++){
       var radians = i * 2 / sides * Math.PI;
-      var newPoint = [topRadius * Math.cos(radians), height / 2, topRadius * Math.sin(radians), 1.0];
+      var newPoint = [topRadius * Math.cos(radians), height / 2, topRadius * Math.sin(radians)];
       Array.prototype.push.apply(this.vertices, newPoint);
-      newPoint = [bottomRadius * Math.cos(radians), -height / 2, bottomRadius * Math.sin(radians), 1.0];
+      newPoint = [bottomRadius * Math.cos(radians), -height / 2, bottomRadius * Math.sin(radians)];
       Array.prototype.push.apply(this.vertices, newPoint);
-      if(this.vertices.length > 16){
+      Array.prototype.push.apply(this.colourVertices, this.colour);
+      Array.prototype.push.apply(this.colourVertices, this.colour);
+      if(this.vertices.length > 12){
         var topFace = [0, i * 2 + 2, i * 2];
         var bottomFace = [1, i * 2 + 3, i * 2 + 1];
         var firstWallTriangle = [i * 2, i * 2 + 2, i * 2 + 3];
@@ -88,17 +97,21 @@ function Mesh(colour) {
   this.createPrism = function(height, radius, sides){
     this.vertices = [];
     this.faces = [];
-    var topCentre = [0.0, height / 2, 0.0, 1.0];
-    var bottomCentre = [0.0, -height / 2, 0.0, 1.0];
+    var topCentre = [0.0, height / 2, 0.0];
+    var bottomCentre = [0.0, -height / 2, 0.0];
     Array.prototype.push.apply(this.vertices, topCentre);
     Array.prototype.push.apply(this.vertices, bottomCentre);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
     for(i = 0; i < sides; i++){
       var radians = i * 2 / sides * Math.PI;
-      var newPoint = [radius * Math.cos(radians), height / 2, radius * Math.sin(radians), 1.0];
+      var newPoint = [radius * Math.cos(radians), height / 2, radius * Math.sin(radians)];
       Array.prototype.push.apply(this.vertices, newPoint);
-      newPoint = [radius * Math.cos(radians), -height / 2, radius * Math.sin(radians), 1.0];
+      newPoint = [radius * Math.cos(radians), -height / 2, radius * Math.sin(radians)];
       Array.prototype.push.apply(this.vertices, newPoint);
-      if(this.vertices.length > 16){
+      Array.prototype.push.apply(this.colourVertices, this.colour);
+      Array.prototype.push.apply(this.colourVertices, this.colour);
+      if(this.vertices.length > 12){
         var topFace = [0, i * 2 + 2, i * 2];
         var bottomFace = [1, i * 2 + 3, i * 2 + 1];
         var firstWallTriangle = [i * 2, i * 2 + 2, i * 2 + 3];
@@ -122,10 +135,14 @@ function Mesh(colour) {
     this.vertices = [];
     this.faces = [];
 
-    var topLeft = [-width / 2, 0, -height / 2, 1];
-    var topRight = [width / 2, 0, -height / 2, 1];
-    var bottomLeft = [-width / 2, 0, height / 2, 1];
-    var bottomRight = [width / 2, 0, height / 2, 1];
+    var topLeft = [-width / 2, 0, -height / 2];
+    var topRight = [width / 2, 0, -height / 2];
+    var bottomLeft = [-width / 2, 0, height / 2];
+    var bottomRight = [width / 2, 0, height / 2];
+    Array.prototype.push.apply(this.colourVertices, this.colour);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
+    Array.prototype.push.apply(this.colourVertices, this.colour);
 
     Array.prototype.push.apply(this.vertices, topLeft);
     Array.prototype.push.apply(this.vertices, topRight);
